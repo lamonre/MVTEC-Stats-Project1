@@ -28,11 +28,7 @@ Second, import and view owid-covid-data
 
 ```{r}
 
-originalCovid = read_excel("originalData/owid-covid-data-131120.xlsx")
-
-originalCovid %>%
-   mutate(date = as.Date(date, format = "YYYYDDMM")) %>%
-    inner_join(country_info, c("Country_Name" = "") )
+originalCovid = read.csv("originalData/owid-covid-data-28112020.csv")
 
 sapply(originalCovid, class)
 head(originalCovid)
@@ -43,7 +39,9 @@ Join the two datasets
 
 ```{r}
 
-
+originalCovid %>%
+   mutate(date = as.Date(date, format = "YYYYDDMM")) %>%
+    inner_join(country_info, c("Country_Name" = "") )
 
 ```
 
