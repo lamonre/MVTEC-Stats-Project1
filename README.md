@@ -5,7 +5,7 @@
 ### Granularity:
  * Monthly | :+1: :+1: votes
  * Weekly | :+1: :+1: votes
- * Fortnightly | :+1: votes
+ * Fortnightly | :+1: :+1: votes
 
 ### Datasets:
  * Original
