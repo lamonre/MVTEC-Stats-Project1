@@ -40,6 +40,8 @@ OTHER...
 * Monthly or Weekly or Fortnightly Diabetes Prevalence Covid ??
 * Monthly or Weekly or Fortnightly cardiovasc_death_rate Covid vs total deaths Covid ??
 * Weekly_icu_admissions vs hospital_beds_per_thousand Covid ??
+* [Pandemic preparedness & health security index](https://www.ghsindex.org/)
+* [Government response index](https://www.bsg.ox.ac.uk/research/research-projects/coronavirus-government-response-tracker)
 
 
 ## Possible hypotheses
