@@ -24,7 +24,7 @@
 * Causes of mortality ¿¿ I don't find Monthly/weekly/fortnightly by countries ??
 * Unnecessary deaths ¿¿ I don't find Monthly/weekly/fortnightly by countries ??
 
-* OTHER...
+OTHER...
 * Cities with more Density Population
 * Cities with aeroports
 
@@ -44,11 +44,11 @@
 
 ## Possible hypotheses
 
-* Spread is more related to everyday lifestyle than rates of wealth, or socioeconomic status. (Number of aeroports, public transport...)
-* How the weather of each country (cold or hot) affected the spread of the virus. At the beginning of the pandemic some scientists said that the virus was somehow deactivated or supressed by cold weather. (Also Pollution...)
-* Obesity and its impact on severity of virus symptoms, including chance of death.
-* Ethnicity and its impact on spread of virus. Black people in USA have more risk of being contagious.
-* Contract tracing and widespread testing are key factors in controlling the outbreak.
-* Age is just a number and doesn't determine how severe you will experience the virus symptoms. Need to show something that indicates the wide variety of ages is contrary to popular opinion that younger people don't suffer from it as much or as long.
-* Overloaded hospital systems was the biggest cause of unnecessary death. Types of medication used by different countries - does it have an impact on death rate?
+* Spread is more related to **everyday lifestyle** than rates of wealth, or socioeconomic status. *(Number of aeroports, public transport...?)*
+* How the **weather** of each country *(cold or hot)* affected the spread of the virus. At the beginning of the pandemic some scientists said that the virus was somehow deactivated or supressed by cold weather. *(Also Pollution...?)*
+* **Obesity** and its impact on severity of virus symptoms, including chance of death.
+* **Ethnicity** and its impact on spread of virus. Black people in USA have more risk of being contagious.
+* Contract tracing and widespread **testing** are key factors in controlling the outbreak.
+* **Age** is just a number and doesn't determine how severe you will experience the virus symptoms. Need to show something that indicates the wide variety of ages is contrary to popular opinion that younger people don't suffer from it as much or as long.
+* **Overloaded hospital** systems was the biggest cause of unnecessary death. Types of medication used by different countries - does it have an impact on death rate?
 
