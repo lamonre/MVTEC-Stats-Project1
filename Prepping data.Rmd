@@ -21,6 +21,7 @@ library(readxl)
 country_info = read_excel("originalData/country-info.xlsx")
 
 sapply(country_info, class)
+head(country_info)
 
 ```
 
@@ -39,9 +40,25 @@ Join the two datasets
 
 ```{r}
 
-originalCovid %>%
-   mutate(date = as.Date(date, format = "YYYYDDMM")) %>%
-    inner_join(country_info, c("Country_Name" = "") )
+mergedData <- originalCovid %>%
+          #mutate(date = as.Date(date, format = "%Y-%M-%D")) %>%
+          inner_join(country_info, c("location" = "COUNTRY") )
+
+
+sapply(mergedData, class)
+head(mergedData)
+```
+
+Step 1: Change the column names to be smaller so that it can show better on the plots we create later.
+
+```{r}
+
+#Set up names
+names(mergedData)
+
+#newNames <- 
+
+#<- aggregate() for groupings. By location, collapses ev
 
 ```
 
