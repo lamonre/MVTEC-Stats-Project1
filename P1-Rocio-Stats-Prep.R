@@ -1,14 +1,13 @@
-#  READING CREDSCO.CSV. NOTE: Change the path of the file for the proper one in your computer
+### PROJECT 1 Covid19 - Statistics
+# @authors: Ànnia, Rebecca, Rocío, Victor.
 
-#Note: Take care to use "/" fo the directory file. "\" provides errors
-#Note: Update the working directory to your own path
 
-setwd("D:/karina/docencia/01areferenciesPPT/0DadesPractiques/CREDSCO")
+# wd -> working directory
+#setwd("/originalData")
 
-dd <- read.table("credsco.csv",header=T);
+dd <- read.table("owid-covid-data-28112020.csv",header=T);
 
 #is R reading data correctly?
-
 
 dd <- read.table("credsco.csv",header=T, sep=";");
 
