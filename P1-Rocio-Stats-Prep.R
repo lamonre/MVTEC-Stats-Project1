@@ -2,19 +2,15 @@
 # @authors: Ànnia, Rebecca, Rocío, Victor.
 
 
-# wd -> working directory
-#setwd("/originalData")
-
+# READING DATA FROM EXCEL
 library(readr);
 
 ddCovid <- read_excel("originalData/owid-covid-data-131120.xlsx", col_names = TRUE, na="NA");
 ddExtra <- read_excel("originalData/country-info-clean.xlsx",col_names = TRUE, na="NA");
 
 
-#is R reading data correctly?
-
-
-#Has dd the correct number of rows and columns?
+# is R reading data correctly?
+# Has dd the correct number of ROWS and COLUMNS?
 dim(ddCovid)
 dim(ddExtra)
 n<-dim(ddCovid)[2]
@@ -22,7 +18,7 @@ n
 K<-dim(ddExtra)[1]
 K
 
-#is dd the expected type of object?
+# TIPO DE OBJETO DATOS
 class(ddCovid)
 class(ddExtra)
 
@@ -67,6 +63,10 @@ summary(HospitalAdmisions)
 summary(dd[,1])
 barplot(table(Dictamen))
 pie(table(Dictamen))
+
+# interpolate data para llenar datos NA
+# imputeTS library
+# https://www.rdocumentation.org/packages/imputeTS/versions/3.1
 
 #internal coertion. NOT ALWAYS
 barplot(table(dd[,1]))
