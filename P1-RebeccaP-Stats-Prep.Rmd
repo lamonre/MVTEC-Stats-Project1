@@ -7,41 +7,44 @@ Setting up my R environment
 ```{r}
 library(dplyr)
 library(tidyr)
-
-```
-
-First, trying to import the XLSX of country_info
-
-
-```{r}
 library(readxl)
 
-country_info = read_excel("rawData/country-info.xlsx")
-
-sapply(country_info, class)
-
 ```
 
-Second, import and view owid-covid-data
+*Step 1*: Import 3 datasets
 
 ```{r}
 
-originalCovid = read.csv(file = "rawData/owid-covid-data.csv")
+#Data import
+country_info = read_excel("originalData/country-info.xlsx")
+originalCovid = read.csv(file = "originalData/owid-covid-data-28112020.csv")
+ghsIndex = read.csv(file = "additionalData/globalSecurityIndex .csv")
 
-originalCovid %>%
-   mutate(date = as.Date(date, format = "YYYYDDMM")) %>%
-    inner_join(country_info, c("location" = "Country_Name"))
-
-sapply(originalCovid, class)
+head(country_info)
 head(originalCovid)
-
+head(ghsIndex)
 ```
-
-Join the two datasets
 
 ```{r}
+#For originalCovid, make sure date column is reading as date.
 
+dtCorrectedCovid = originalCovid %>%
+    mutate(date = as.Date(date, format="%Y-%m-%d"))
 
+head(dtCorrectedCovid)
 
 ```
 
+*Step 2*: Join the three datasets
+
+```{r}
+mergedData = dtCorrectedCovid %>%
+    inner_join(country_info, c("location" = "COUNTRY"))  %>%
+    inner_join(ghsIndex, c("location" = "Country"))
+
+sapply(mergedData, class)
+head(mergedData)
+
+```
+
+*Step 3*: Aggregate data into weeks

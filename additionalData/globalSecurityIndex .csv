@@ -1,0 +1,196 @@
+Country,overall_index,category
+United States,83.5,Most prepared
+United Kingdom,77.9,Most prepared
+Netherlands,75.6,Most prepared
+Australia,75.5,Most prepared
+Canada,75.3,Most prepared
+Thailand,73.2,Most prepared
+Sweden,72.1,Most prepared
+Denmark,70.4,Most prepared
+South Korea,70.2,Most prepared
+Finland,68.7,Most prepared
+France,68.2,Most prepared
+Slovenia,67.2,Most prepared
+Switzerland,67,Most prepared
+Germany,66,More prepared
+Spain,65.9,More prepared
+Norway,64.6,More prepared
+Latvia,62.9,More prepared
+Malaysia,62.2,More prepared
+Belgium,61,More prepared
+Portugal,60.3,More prepared
+Japan,59.8,More prepared
+Brazil,59.7,More prepared
+Ireland,59,More prepared
+Singapore,58.7,More prepared
+Argentina,58.6,More prepared
+Austria,58.5,More prepared
+Chile,58.3,More prepared
+Mexico,57.6,More prepared
+Estonia,57,More prepared
+Indonesia,56.6,More prepared
+Italy,56.2,More prepared
+Poland,55.4,More prepared
+Lithuania,55,More prepared
+South Africa,54.8,More prepared
+Hungary,54,More prepared
+New Zealand,54,More prepared
+Greece,53.8,More prepared
+Croatia,53.3,More prepared
+Albania,52.9,More prepared
+Turkey,52.4,More prepared
+Serbia,52.3,More prepared
+Czech Republic,52,More prepared
+Georgia,52,More prepared
+Armenia,50.2,More prepared
+Ecuador,50.1,More prepared
+Mongolia,49.5,More prepared
+Kyrgyz Republic,49.3,More prepared
+Saudi Arabia,49.3,More prepared
+Peru,49.2,More prepared
+Vietnam,49.1,More prepared
+China,48.2,More prepared
+Slovakia,47.9,More prepared
+Philippines,47.6,More prepared
+Israel,47.3,More prepared
+Kenya,47.1,More prepared
+United Arab Emirates,46.7,More prepared
+India,46.5,More prepared
+Iceland,46.3,More prepared
+Kuwait,46.1,More prepared
+Romania,45.8,More prepared
+Bulgaria,45.6,More prepared
+Costa Rica,45.1,More prepared
+Russia,44.3,More prepared
+Uganda,44.3,More prepared
+Colombia,44.2,More prepared
+El Salvador,44.2,More prepared
+Luxembourg,43.8,More prepared
+Montenegro,43.7,More prepared
+Morocco,43.7,More prepared
+Panama,43.7,More prepared
+Liechtenstein,43.5,More prepared
+Myanmar,43.4,More prepared
+Laos,43.1,More prepared
+Lebanon,43.1,More prepared
+Nicaragua,43.1,More prepared
+Oman,43.1,More prepared
+Cyprus,43,More prepared
+Moldova,42.9,More prepared
+Bosnia and Herzegovina,42.8,More prepared
+Jordan,42.1,More prepared
+Uruguay,41.3,More prepared
+Qatar,41.2,More prepared
+Kazakhstan,40.7,More prepared
+Ethiopia,40.6,More prepared
+Bhutan,40.3,More prepared
+Madagascar,40.1,More prepared
+Egypt,39.9,More prepared
+Bahrain,39.4,More prepared
+Cambodia,39.2,More prepared
+North Macedonia,39.1,More prepared
+Dominican Republic,38.3,More prepared
+Sierra Leone,38.2,More prepared
+Zimbabwe,38.2,More prepared
+Ukraine,38,More prepared
+Senegal,37.9,More prepared
+Nigeria,37.8,More prepared
+Iran,37.7,More prepared
+Malta,37.3,More prepared
+Trinidad and Tobago,36.6,More prepared
+Suriname,36.5,More prepared
+Tanzania,36.4,More prepared
+Bolivia,35.8,More prepared
+Paraguay,35.7,More prepared
+Namibia,35.6,More prepared
+Côte d'Ivoire,35.5,More prepared
+Ghana,35.5,More prepared
+Pakistan,35.5,More prepared
+Belarus,35.3,More prepared
+St Lucia,35.3,More prepared
+Cuba,35.2,More prepared
+Liberia,35.1,More prepared
+Nepal,35.1,More prepared
+Bangladesh,35,More prepared
+Mauritius,34.9,More prepared
+Cameroon,34.4,More prepared
+Uzbekistan,34.3,More prepared
+Azerbaijan,34.2,More prepared
+Gambia,34.2,More prepared
+Rwanda,34.2,More prepared
+Sri Lanka,33.9,More prepared
+Maldives,33.8,More prepared
+Tunisia,33.7,More prepared
+St Vincent and The Grenadines,33,Least prepared
+Micronesia,32.8,Least prepared
+Guatemala,32.7,Least prepared
+Guinea,32.7,Least prepared
+Monaco,32.7,Least prepared
+Brunei,32.6,Least prepared
+Togo,32.5,Least prepared
+Afghanistan,32.3,Least prepared
+Tajikistan,32.3,Least prepared
+Niger,32.2,Least prepared
+Barbados,31.9,Least prepared
+Seychelles,31.9,Least prepared
+Belize,31.8,Least prepared
+Turkmenistan,31.8,Least prepared
+Guyana,31.7,Least prepared
+Haiti,31.5,Least prepared
+Botswana,31.1,Least prepared
+eSwatini (Swaziland),31.1,Least prepared
+San Marino,31.1,Least prepared
+Bahamas,30.6,Least prepared
+Andorra,30.5,Least prepared
+Lesotho,30.2,Least prepared
+Burkina Faso,30.1,Least prepared
+Cabo Verde,29.3,Least prepared
+Antigua and Barbuda,29,Least prepared
+Jamaica,29,Least prepared
+Mali,29,Least prepared
+Benin,28.8,Least prepared
+Chad,28.8,Least prepared
+Zambia,28.7,Least prepared
+Mozambique,28.1,Least prepared
+Malawi,28,Least prepared
+Papua New Guinea,27.8,Least prepared
+Honduras,27.6,Least prepared
+Grenada,27.5,Least prepared
+Mauritania,27.5,Least prepared
+Central African Republic,27.3,Least prepared
+Comoros,27.2,Least prepared
+Congo (Democratic Republic),26.5,Least prepared
+Samoa,26.4,Least prepared
+St Kitts and Nevis,26.2,Least prepared
+Sudan,26.2,Least prepared
+Vanuatu,26.1,Least prepared
+Timor-Leste,26,Least prepared
+Iraq,25.8,Least prepared
+Fiji,25.7,Least prepared
+Libya,25.7,Least prepared
+Angola,25.2,Least prepared
+Tonga,25.1,Least prepared
+Dominica,24,Least prepared
+Algeria,23.6,Least prepared
+Congo (Brazzaville),23.6,Least prepared
+Djibouti,23.2,Least prepared
+Venezuela,23,Least prepared
+Burundi,22.8,Least prepared
+Eritrea,22.4,Least prepared
+Palau,21.9,Least prepared
+South Sudan,21.7,Least prepared
+Tuvalu,21.6,Least prepared
+Nauru,20.8,Least prepared
+Solomon Islands,20.7,Least prepared
+Niue,20.5,Least prepared
+Cook Islands,20.4,Least prepared
+Gabon,20,Least prepared
+Guinea-Bissau,20,Least prepared
+Syria,19.9,Least prepared
+Kiribati,19.2,Least prepared
+Yemen,18.5,Least prepared
+Marshall Islands,18.2,Least prepared
+São Tomé and Príncipe,17.7,Least prepared
+North Korea,17.5,Least prepared
+Somalia,16.6,Least prepared
+Equatorial Guinea,16.2,Least prepared
