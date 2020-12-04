@@ -7,30 +7,33 @@
 
 library(readr);
 
-dd <- read.table("originalData/owid-covid-data-28112020.csv", header=T, sep=",");
+ddCovid <- read_excel("originalData/owid-covid-data-131120.xlsx", col_names = TRUE, na="NA");
+ddExtra <- read_excel("originalData/country-info-clean.xlsx",col_names = TRUE, na="NA");
 
 
 #is R reading data correctly?
 
-ddExtra <- read.table("originalData/country-info-clean-OK.csv",header=T, sep=";");
 
 #Has dd the correct number of rows and columns?
-dim(dd)
+dim(ddCovid)
 dim(ddExtra)
-n<-dim(dd)[1]
+n<-dim(ddCovid)[2]
 n
 K<-dim(ddExtra)[1]
 K
 
 #is dd the expected type of object?
-class(dd)
+class(ddCovid)
+class(ddExtra)
 
 #check column contents
-names(dd)
-View(dd)
+names(ddCovid)
+View(ddCovid)
 
 #open access by name to columns
-#attach(dd)
+attach(ddCovid)
+attach(ddExtra)
+?attach
 
 #are all columns of expected types?
 
@@ -38,65 +41,34 @@ View(dd)
 #boxplot(Dictamen)
 #class(dd[,1])
 #class(Dictamen)
-sapply(dd, class)
+sapply(ddCovid, class)
 sapply(ddExtra,class)
 
-# if numerical variables are taken as FACTORS, include proper "dec" parameter
-#dd <- read.table("credsco.csv",header=T, sep=";", dec=".");
 
-#open access by name to columns
-attach(dd)
-
-# DECLARE CATEGORICAL 
-#identify which categorical are not recognized by the system yet
-sapply(dd, class)
-
-#declare factors
-attach(dd)
-
-names(dd)
-class(dd[,6])
-
-
-
-Dictamen    <- as.factor(Dictamen)
-Vivienda     <- factor(Vivienda)
-Estado.civil <- factor(Estado.civil)
-Registros   <- factor(Registros)
-Tipo.trabajo <-factor(Tipo.trabajo)
+HospitalAdmisions <- as.numeric(weekly_hosp_admissions)
 
 # R knows that Dictament is not numeric now
-mean(Dictamen)
+mean(HospitalAdmisions)
 
-class(Dictamen)
-table(Dictamen)
+class(HospitalAdmisions)
+table(HospitalAdmisions)
+sapply(HospitalAdmisions,class)
 
-actives<-c(2:14)
-dd2<-dd
-dd<-dd[,actives]
-
-#look at modalities
-K<-dim(dd)[2]
-dfactor<-c(2:K)
-levelsVars<-sapply(dd[,dfactor],levels)
-levelsVars[5]
-
-#care with "attach" effects
-levels(Dictamen)
-levels(Vivienda)
-levels(Estado.civil)
-levels(Registros)
-levels(Tipo.trabajo)
+# Crear una nueva columna
+# actives<-c(2:14)
+# dd2<-dd
+# dd<-dd[,actives]
 
 #consistency issues derived from "attach" function
-class(Dictamen)
+class(HospitalAdmisions)
 class(dd[,1])
-summary(Dictamen)
+summary(ddCovid$weekly_hosp_admissions)
+summary(HospitalAdmisions)
 summary(dd[,1])
 barplot(table(Dictamen))
 pie(table(Dictamen))
 
-#internal coertion. NOT ALLWAYS
+#internal coertion. NOT ALWAYS
 barplot(table(dd[,1]))
 
 #INTERPRETABILITY, EXPLAINABILITY
