@@ -1,0 +1,73 @@
+---
+title: "R Notebook - prepping data for assignment"
+output: html_notebook
+---
+Setting up my R environment
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(readxl)
+
+```
+
+*Step 1*: Import 3 datasets
+
+```{r}
+
+#Data import
+country_info = read_excel("originalData/country-info.xlsx")
+originalCovid = read.csv(file = "originalData/owid-covid-data-28112020.csv")
+ghsIndex = read.csv(file = "additionalData/globalSecurityIndex .csv")
+
+head(country_info)
+head(originalCovid)
+head(ghsIndex)
+```
+
+```{r}
+#For originalCovid, make sure date column is reading as date.
+
+dtCorrectedCovid = originalCovid %>%
+    mutate(date = as.Date(date, format="%Y-%m-%d"))
+
+head(dtCorrectedCovid)
+
+```
+
+*Step 2*: Join the three datasets
+
+```{r}
+mergedData = dtCorrectedCovid %>%
+    inner_join(country_info, c("location" = "COUNTRY"))  %>%
+    inner_join(ghsIndex, c("location" = "Country"))
+
+sapply(mergedData, class)
+head(mergedData)
+
+```
+
+*Step 3*: Filter to only selected columns
+
+```{r}
+cleanedData = mergedData %>%
+  mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
+  subset(select = c(iso_code, continent, location, date, total_cases, new_cases, total_deaths, new_deaths, reproduction_rate, weekly_icu_admissions, weekly_hosp_admissions, total_tests, new_tests, population, population_density, median_age, gdp_per_capita, handwashing_facilities, Government_Type, Corruption_preception, category))
+
+head(cleanedData)
+   
+```
+*Step 4*: Rename
+
+```{r}
+renamedData = cleanedData %>%
+  rename(country = location, rRate = reproduction_rate, icu = weekly_icu_admissions, hosp = weekly_hosp_admissions, popDensity = population_density, gdp = gdp_per_capita, handsWash = handwashing_facilities, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category)
+
+head(renamedData)
+```
+
+*Step 5*: Deal with missing data
+```{r}
+apply(is.na(renamedData), 2, sum) ##Checking for each column, how many rows are NAs? 
+```
+
