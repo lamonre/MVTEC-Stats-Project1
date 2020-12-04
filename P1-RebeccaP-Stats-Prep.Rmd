@@ -47,15 +47,23 @@ head(mergedData)
 
 ```
 
-*Step 3*: Aggregate data into fortnights
+*Step 3*: Filter to only selected columns
 
 ```{r}
-mergedData %>%
+cleanedData = mergedData %>%
   mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
-  filter(date > "2020-01-01") %>%
-#grabbing just the week doesn't always work, I'd need to further group by YEAR > WEEK, if data flows across years which in this case it just might. So, if we have data for Week 52 in December 2019 + Week 52 in December 2020, I'd be aggregating both accidentally.
-  group_by(week)
+  subset(select = c(iso_code, continent, location, date, total_cases, new_cases, total_deaths, new_deaths, reproduction_rate, weekly_icu_admissions, weekly_hosp_admissions, total_tests, new_tests, population, population_density, median_age, gdp_per_capita, handwashing_facilities, Government_Type, Corruption_preception, category))
+
+head(cleanedData)
    
 ```
+*Step 4*: Rename
 
+```{r}
+renamedData = cleanedData %>%
+  rename(country = location, rRate = reproduction_rate, icu = weekly_icu_admissions, hosp = weekly_hosp_admissions, popDensity = population_density, gdp = gdp_per_capita, handsWash = handwashing_facilities, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category)
 
+head(renamedData)
+```
+
+*Step 5*: Deal with missing data
