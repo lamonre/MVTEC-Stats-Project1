@@ -1,0 +1,47 @@
+---
+title: "R Notebook - prepping data for assignment"
+output: html_notebook
+---
+Setting up my R environment
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+```
+
+First, trying to import the XLSX of country_info
+
+
+```{r}
+library(readxl)
+
+country_info = read_excel("rawData/country-info.xlsx")
+
+sapply(country_info, class)
+
+```
+
+Second, import and view owid-covid-data
+
+```{r}
+
+originalCovid = read.csv(file = "rawData/owid-covid-data.csv")
+
+originalCovid %>%
+   mutate(date = as.Date(date, format = "YYYYDDMM")) %>%
+    inner_join(country_info, c("location" = "Country_Name"))
+
+sapply(originalCovid, class)
+head(originalCovid)
+
+```
+
+Join the two datasets
+
+```{r}
+
+
+
+```
+
