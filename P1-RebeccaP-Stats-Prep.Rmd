@@ -67,3 +67,7 @@ head(renamedData)
 ```
 
 *Step 5*: Deal with missing data
+```{r}
+apply(is.na(renamedData), 2, sum) ##Checking for each column, how manu rows are NAs? 
+```
+
