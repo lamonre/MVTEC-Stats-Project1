@@ -5,17 +5,21 @@
 # wd -> working directory
 #setwd("/originalData")
 
-dd <- read.table("owid-covid-data-28112020.csv",header=T);
+library(readr);
+
+dd <- read.table("originalData/owid-covid-data-28112020.csv", header=T, sep=",");
+
 
 #is R reading data correctly?
 
-dd <- read.table("credsco.csv",header=T, sep=";");
+ddExtra <- read.table("originalData/country-info-clean-OK.csv",header=T, sep=";");
 
 #Has dd the correct number of rows and columns?
 dim(dd)
+dim(ddExtra)
 n<-dim(dd)[1]
 n
-K<-dim(dd)[2]
+K<-dim(ddExtra)[1]
 K
 
 #is dd the expected type of object?
@@ -26,15 +30,16 @@ names(dd)
 View(dd)
 
 #open access by name to columns
-attach(dd)
+#attach(dd)
 
 #are all columns of expected types?
 
-summary(Dictamen)
-boxplot(Dictamen)
-class(dd[,1])
-class(Dictamen)
+#summary(Dictamen)
+#boxplot(Dictamen)
+#class(dd[,1])
+#class(Dictamen)
 sapply(dd, class)
+sapply(ddExtra,class)
 
 # if numerical variables are taken as FACTORS, include proper "dec" parameter
 #dd <- read.table("credsco.csv",header=T, sep=";", dec=".");
