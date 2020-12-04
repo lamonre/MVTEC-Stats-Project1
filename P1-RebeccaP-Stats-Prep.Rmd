@@ -47,4 +47,15 @@ head(mergedData)
 
 ```
 
-*Step 3*: Aggregate data into weeks
+*Step 3*: Aggregate data into fortnights
+
+```{r}
+mergedData %>%
+  mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
+  filter(date > "2020-01-01") %>%
+#grabbing just the week doesn't always work, I'd need to further group by YEAR > WEEK, if data flows across years which in this case it just might. So, if we have data for Week 52 in December 2019 + Week 52 in December 2020, I'd be aggregating both accidentally.
+  group_by(week)
+   
+```
+
+
