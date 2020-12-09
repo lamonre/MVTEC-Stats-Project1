@@ -8,7 +8,8 @@ Setting up my R environment
 library(dplyr)
 library(tidyr)
 library(readxl)
-
+library(imputeTS)
+library(tseries)
 ```
 
 *Step 1*: Import 3 datasets
@@ -52,7 +53,7 @@ head(mergedData)
 ```{r}
 cleanedData = mergedData %>%
   mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
-  subset(select = c(iso_code, continent, location, date, total_cases, new_cases, total_deaths, new_deaths, reproduction_rate, weekly_icu_admissions, weekly_hosp_admissions, total_tests, new_tests, population, population_density, median_age, gdp_per_capita, handwashing_facilities, Government_Type, Corruption_preception, category))
+  subset(select = c(iso_code, continent, location, date, total_cases, new_cases, new_cases_smoothed, total_deaths, new_deaths, new_deaths_smoothed, reproduction_rate, weekly_icu_admissions, weekly_hosp_admissions, total_tests, new_tests, population, population_density, median_age, gdp_per_capita, handwashing_facilities, Government_Type, Corruption_preception, category))
 
 head(cleanedData)
    
@@ -61,13 +62,13 @@ head(cleanedData)
 
 ```{r}
 renamedData = cleanedData %>%
-  rename(country = location, rRate = reproduction_rate, icu = weekly_icu_admissions, hosp = weekly_hosp_admissions, popDensity = population_density, gdp = gdp_per_capita, handsWash = handwashing_facilities, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category)
+  rename(country = location, rRate = reproduction_rate, icu = weekly_icu_admissions, hosp = weekly_hosp_admissions, popDensity = population_density, gdp = gdp_per_capita, handsWash = handwashing_facilities, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category, casesSmooth = new_cases_smoothed, deathSmooth = new_deaths_smoothed)
 
 head(renamedData)
 ```
 
 *Step 5*: Deal with missing data
 ```{r}
-apply(is.na(renamedData), 2, sum) ##Checking for each column, how many rows are NAs? 
+apply(is.na(renamedData), 2, sum)##Checking for each column, how many rows are NAs? 
 ```
 
