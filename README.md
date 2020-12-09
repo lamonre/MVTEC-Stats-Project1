@@ -10,7 +10,7 @@
     * Victor: Temperature
 
 ### Countries:
-* 10 first country/continent with more cases of Covid per million (from the first date register in the DB)
+* 10 first countries per continent, with more cases of Covid per million (from the first date register in the DB)
 
 ### Our variables:
 #### Qualitative:
