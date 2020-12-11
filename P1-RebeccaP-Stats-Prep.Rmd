@@ -18,7 +18,7 @@ library(tseries)
 
 #Data import
 country_info = read_excel("originalData/country-info.xlsx")
-originalCovid = read.csv(file = "originalData/owid-covid-data-28112020.csv")
+originalCovid = read_excel("originalData/owid-covid-data-clean.xlsx")
 ghsIndex = read.csv(file = "additionalData/globalSecurityIndex .csv")
 
 head(country_info)
@@ -53,7 +53,7 @@ head(mergedData)
 ```{r}
 cleanedData = mergedData %>%
   mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
-  subset(select = c(iso_code, continent, location, date, total_cases, new_cases, new_cases_smoothed, total_deaths, new_deaths, new_deaths_smoothed, reproduction_rate, weekly_icu_admissions, weekly_hosp_admissions, total_tests, new_tests, population, population_density, median_age, gdp_per_capita, handwashing_facilities, Government_Type, Corruption_preception, category))
+  subset(select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases_smoothed, total_deaths, new_deaths_smoothed, reproduction_rate, population, population_density, median_age, gdp_per_capita, Government_Type, Corruption_preception, category))
 
 head(cleanedData)
    
@@ -62,13 +62,34 @@ head(cleanedData)
 
 ```{r}
 renamedData = cleanedData %>%
-  rename(country = location, rRate = reproduction_rate, icu = weekly_icu_admissions, hosp = weekly_hosp_admissions, popDensity = population_density, gdp = gdp_per_capita, handsWash = handwashing_facilities, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category, casesSmooth = new_cases_smoothed, deathSmooth = new_deaths_smoothed)
+  rename(region = continent, country = location, tcpm = total_cases_per_million, rRate = reproduction_rate, popDensity = population_density, gdp = gdp_per_capita, govt = Government_Type, corruption = Corruption_preception, healthSecurity = category, casesSmooth = new_cases_smoothed, deathSmooth = new_deaths_smoothed)
 
 head(renamedData)
 ```
 
-*Step 5*: Deal with missing data
+*Step 5*: See how many with missing data
 ```{r}
 apply(is.na(renamedData), 2, sum)##Checking for each column, how many rows are NAs? 
+```
+
+*Step 6*: Group to top 40 for globally based on total cases per million, those with more than 50,000 cases and population higher than one million.
+
+```{r}
+filtered = renamedData %>%
+  filter(date == as.Date("2020-12-04"), total_cases >= 50000, population >= 1000000) %>%
+  slice_max(order_by = tcpm, n=40) %>%
+  group_by(region, country)
+  
+selectedCountries = unlist(filtered[,3])
+print(selectedCountries)
+```
+
+*Step 7* Filter renamedData to create a cleanData for next stage: Clustering, using the list created in Step 6
+```{r}
+finalData = renamedData %>%
+  filter(country %in% selectedCountries) %>%
+  arrange(region)
+
+head(finalData)
 ```
 
