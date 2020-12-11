@@ -53,7 +53,7 @@ head(mergedData)
 ```{r}
 cleanedData = mergedData %>%
   mutate(week = format(date, format="%W")) %>% #Add a new column with the 'week' number
-  subset(select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases_smoothed, total_deaths, new_deaths_smoothed, reproduction_rate, population, population_density, median_age, gdp_per_capita, Government_Type, Corruption_preception, category))
+  subset(select = c(iso_code, continent, location, date, week, total_cases, total_cases_per_million, new_cases_smoothed, total_deaths, new_deaths_smoothed, reproduction_rate, population, population_density, median_age, gdp_per_capita, Government_Type, Corruption_preception, category))
 
 head(cleanedData)
    
@@ -78,7 +78,8 @@ apply(is.na(renamedData), 2, sum)##Checking for each column, how many rows are N
 #filtering dataset
 filtered = renamedData %>%
   filter(date == as.Date("2020-12-04"), total_cases >= 10000, population >= 1000000) %>%
-  slice_max(order_by = tcpm, n=50)
+  slice_max(order_by = tcpm, n=50) %>%
+  group_by(week)
 
 head(filtered)
 #checking countries per region is even
@@ -95,14 +96,16 @@ print(selectedCountries)
 *Step 7* Filter renamedData to create a cleanData for next stage: Clustering, using the list created in Step 6
 ```{r}
 finalData = renamedData %>%
-  filter(country %in% selectedCountries)
-  
+  filter(country %in% selectedCountries) %>%
+  group_by(week, iso_code, region, country) %>%
+  filter(country == "Argentina", date >= "2020-12-01") %>%
+  summarise(min(date), totalCases = max(total_cases))
 head(finalData)
 ```
 *Step 8* Export FinalData
 
 ```{r}
 write.csv(finalData, file="data_output/rvpazos_preprocessed.csv",
-          row.names=TRUE)
+          row.names=FALSE)
 ```
 
