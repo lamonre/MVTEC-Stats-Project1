@@ -75,11 +75,19 @@ apply(is.na(renamedData), 2, sum)##Checking for each column, how many rows are N
 *Step 6*: Group to top 40 for globally based on total cases per million, those with more than 50,000 cases and population higher than one million.
 
 ```{r}
+#filtering dataset
 filtered = renamedData %>%
-  filter(date == as.Date("2020-12-04"), total_cases >= 50000, population >= 1000000) %>%
-  slice_max(order_by = tcpm, n=40) %>%
-  group_by(region, country)
+  filter(date == as.Date("2020-12-04"), total_cases >= 10000, population >= 1000000) %>%
+  slice_max(order_by = tcpm, n=50)
+
+head(filtered)
+#checking countries per region is even
+byRegion = filtered %>% 
+  group_by(region) %>%
+  summarise(countries = n_distinct(country))
+print(byRegion)
   
+#extracting selected countries based on criteria set above
 selectedCountries = unlist(filtered[,3])
 print(selectedCountries)
 ```
@@ -87,9 +95,14 @@ print(selectedCountries)
 *Step 7* Filter renamedData to create a cleanData for next stage: Clustering, using the list created in Step 6
 ```{r}
 finalData = renamedData %>%
-  filter(country %in% selectedCountries) %>%
-  arrange(region)
-
+  filter(country %in% selectedCountries)
+  
 head(finalData)
+```
+*Step 8* Export FinalData
+
+```{r}
+write.csv(finalData, file="data_output/rvpazos_preprocessed.csv",
+          row.names=TRUE)
 ```
 
