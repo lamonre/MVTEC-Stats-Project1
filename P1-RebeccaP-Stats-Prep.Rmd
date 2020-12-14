@@ -96,14 +96,36 @@ print(selectedCountries)
 *Step 7* Filter renamedData to create a cleanData for next stage: Clustering, using the list created in Step 6
 ```{r}
 finalData = renamedData %>%
-  filter(country %in% selectedCountries) %>%
-  group_by(week, iso_code, region, country) %>%
-  filter(country == "Argentina", date >= "2020-12-01") %>%
-  summarise(min(date), totalCases = max(total_cases))
+  #Based on countries filtered in the above chunk.
+  filter(country %in% selectedCountries) %>% 
+  #Adding year as a field as the groupings will need to be grouped by Year > Week, not just Week.
+  mutate(year = format(date, "%Y")) %>%
+  group_by(year, week, iso_code, region, country) %>%
+  filter(region == "Asia", date >= "2020-12-01") %>%
+  summarise(date = min(date), #the first date of the week
+            totalCases = max(total_cases), #
+            tcpm = max(tcpm), 
+            casesSmooth = mean(casesSmooth), 
+            totalDeaths = max(total_deaths), 
+            deathSmooth = mean(deathSmooth), 
+            population = first(population), 
+            popDensity = first(popDensity), 
+            medianAge = first(median_age), 
+            gdp = first(gdp),
+            govt = first(govt),
+            corruption = first(corruption),
+            healthSecurity = first(healthSecurity)
+            )
+
 head(finalData)
 ```
-*Step 8* Export FinalData
 
+My codebook
+```{r}
+names(finalData)
+```
+
+*Step 8* Export FinalData
 ```{r}
 write.csv(finalData, file="data_output/rvpazos_preprocessed.csv",
           row.names=FALSE)
