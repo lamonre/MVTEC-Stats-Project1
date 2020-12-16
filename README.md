@@ -1,11 +1,22 @@
 # MVTEC-Stats-Project1
-Annia - create A_extraData.csv
-Rebecca - set up logins for AWS, Heroku, Observable??
-All - figure out how to upload A_extraData.csv
-    - Create Python script to read CovidDaily data and output data we need to S3 bucket to create B_covidDaily.csv
-    - Join A & B, to make C
 
-Questions to Matt:
+###### Update: Wednesday, Dec 16, 2020
+
+## Task List:
+- [ ] Create "A_extraData.csv" (Annia to compile)
+    - [ ] Rebecca sends healthSecurity data
+    - [ ] Rocio sends mortalityCauses data
+    - [ ] 
+- [ ] Set up logins
+    - [ ] AWS
+    - [ ] Heroku
+    - [ ] Observable?
+    - [x] Email errors
+- [ ] Figure out how to upload A_extraData.csv
+- [ ] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
+- [ ] Create scripts to join A & B, output C for next stage
+
+## Questions to Matt:
 - Show diagram and make sure we are going in the right direction.
 - Should we try read the daily data directly into R, or should we use Python instead? For B_covidDaily.csv.
 - Save the CSV directly from R to S3, avoid having to write Python script? Or should we be putting more Python scripts in for error checks?
@@ -13,109 +24,70 @@ Questions to Matt:
 - Should we use the Heroku scheduler multiple times? Or can we only run it once? Will this start charging us? How can we track?
 - Maybe some tips to simplify the workflow.
 
-## Final variables
+## Data focus
+We have decided to limit our analysis to the countries that have sufficient data for **hospital beds** and **weekly hospital admissions**. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
 
-A_extraData.csv (No date field)
-*Country*, population, popDensity, medianAge, gdp, obesity, **temp**, govt, corruption, healthSecurity, mortalityCauses  
+countries = [
+            Belgium, 
+            Croatia, 
+            Cyprus, 
+            Czech Republic, 
+            Denmark,
+            Estonia,
+            France,
+            Greece, 
+            Germany,
+            Iceland,
+            Ireland,
+            Latvia, 
+            Lithuania,
+            Malta,
+            Netherlands,
+            Portugal, 
+            Romania,
+            Slovenia,
+            Spain,
+            Sweden,
+            United Kingdom,
+            United States]
 
-B_covidDaily.csv (Date field)
-Year, Week, Region, *Country*, totalCases, totalCasePerMillion, casesSmooth, totalDeaths, totalDeathsPerMillion, deathSmooth
+## Pre-processing
 
-GROUPING
-Year | Rscript
-Week | Rscript
-Region | OWID 
-Country | OWID
+In the pre-processing stage, we will be uploading two data files and then later join them into one for the next stage.
 
-QUANTITATIVE
-totalCases | Descriptive | OWID
-totalCasesPerMillion | Analysis | OWID
-casesSmooth | Rscript (take average of week) | OWID
-totalDeaths | Descriptive| OWID
-totalDeathsPerMillion | Analysis | OWID
-deathSmooth | Rscript (take average of week) | OWID
+One is a static file that will be uploaded one time (A_extraData.csv). The other is a dynamic file that will be pulling in data daily (B_covidDaily.csv).
 
+#### Variables in "A_extraData.csv"
+There will be no date field. It is uploaded once.
 
-population | OWID 
-popDensity | OWID 
-medianAge | OWID
-gdp | OWID
-obesity | EXTRA
-temperature? | EXTRA
+| Variables     | Type      | Origin    | Description      |
+| ------------- |:--------: |:--------: | -----:           |
+| **country**   | Identifier| OWID      | Joining variable. |
+| population    | Numeric   | OWID      | Population of country. |
+| popDensity    | Numeric   | OWID      | Population density. |
+| medianAge     | Numeric   | OWID      | |
+| gdp           | Numeric   | OWID      | |
+| govt          | Character | External  | Type of government in the country. |
+| corruption    | Character | External  | Highly corrupt or less corrupt. |
+| obesity       | Numeric   | Annia     | |
+| healthSecurity| Character | Rebecca   | Pandemic preparedness index from 2019. Most prepared, more prepared and least prepared. | 
+|  temp         | Numeric?  | Victor    | |
+| mortality     | Character | Rocio     | |
+ 
 
-QUALITATIVE
-govt | EXTRA
-corruption | EXTRA
-healthSecurity | EXTRA Rebecca - will pass a dataset just with the 22 countries
-mortalityCauses | EXTRA Rocio - need to compress to 22 countries, top 4 causes of death
+#### Variables in "B_covidDaily.csv"
+This will include a date field. Most likely written in Python script. Updated daily, uploaded weekly (TBC).
+| Variables   | Type      | Origin     | Description |
+| ----------- | :-------: | :---------:| ---:        |
+| year        | Date      | Calculated | Extracted from the date field for grouping of weeks across years. |
+| week        | Date      | Calculated | Extracted, similar to year field. |
+| region      | Character | OWID       | Used for region groupings if needed. |
+| **country** | Identifier| OWID       | Joining and grouping variable. |
+| totalCases  | Numeric   | OWID       | Cumulative cases for that country on that date. |
+| tcpm        | Numeric   | OWID       | Total cases per million, cumulative.
+| casesSmooth | Numeric   | OWID       | Daily new cases smoothed. Avg calculated for each week. |
+| totalDeaths | Numeric   | OWID       | Cumulative cases for that country on that date. |
+| tdpm        | Numeric   | OWID       | Total deaths per million, cumulative. |
+| deathSmooth | Numeric   | OWID       | Daily new deaths smoothed. Avg calculated for each week. |
 
-
-Data limitation:
-We have decided to limit our analysis to the countries that have sufficient data for hospital beds and weekly hospital admissions. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
-
-countries = Belgium, Croatia, Denmark, Germany, Iceland, Portugal, Romania, United Kingdom, Cyprus, Czech Republic, Estonia, France, Greece, Ireland, Latvia, Lithuania, Malta, Netherlands, Slovenia, Spain, Sweden, United States
-
-
-## Steps for Pre-processing
-
-*Everybody uploads his preprocessing script at the repository by calling it in that way: P1-Name-Stats-Prep.R
-*We've decided to add a column with new data to the main database. Each of us has different data to see if some are relevant for the analysis. Each of us will add and combine one column from a different dataset:
-    * Annia: Obesity
-    * Rebecca: Global Health Security Index
-    * Rocío: Causes of death
-    * Victor: Temperature
-
-### Countries:
-* 10 first countries per continent, with more cases of Covid per million (from the first date register in the DB)
-
-### Our variables:
-#### Qualitative:
-* Government_Type
-* Corruption_preception
-* Causes of mortality
-
-
-#### Quantitative (Granularity 2 weeks)
-* total_cases_per_million
-* new_cases_smoothed_per_million
-* total_deaths_per_million
-* new_deaths_smoothed_per_million 
-* reproduction_rate
-* weekly_icu_admissions_per_million
-* weekly_hosp_admissions_per_million
-* total_tests_per_thousand
-* population_density
-* median_age
-* gdp_per_capita
-
-
-### Datasets:
- * Original
-    * Our World In Data Covid-19 [data](https://github.com/arixha/MVTEC-Stats-Project1/blob/main/owid-covid-data-131120.xlsx) by country
-    * [Country info](country-info.xlsx) supplied by Karina's students.
- * Additonal datasets
-    * [Government response index](https://www.bsg.ox.ac.uk/research/research-projects/coronavirus-government-response-tracker)
-    * [Obesity](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/our%20data/obesity%20adults%20WHO), [Diabetes](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/our%20data/diabetes%20adults%20WDB)
-    * [Mortality](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/our%20data/data%20mortality%20causes%20WHO%202016)
-    * [Air pollution](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/our%20data/air%20pollution%20WDB)
-
-
-
-
-
------------------
-
-
-OTHER QUALITATIVE DATA...
-* Cities with aeroports
-
-OTHER QUANTITATIVE DATA...
-* total_cases
-* new_cases_smoothed
-* total_deaths 
-* new_deaths_smoothed 
-* population
-* [Pandemic preparedness & health security index](https://www.ghsindex.org/)
-* [Government response index](https://www.bsg.ox.ac.uk/research/research-projects/coronavirus-government-response-tracker)
-
-
+**Output will be C_covidOK.csv**

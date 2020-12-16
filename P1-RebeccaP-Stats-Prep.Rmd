@@ -161,3 +161,35 @@ write.csv(finalData, file="data_output/rvpazos_preprocessed.csv",
           row.names=FALSE)
 ```
 
+## Curiosity: Which countries have complete testing and hospital data?
+
+weekly_icu_admissions_per_million
+weekly_hosp_admissions_per_million
+total_tests_per_thousand
+```{r}
+#RemoveNA from weekly_icu_admissions_per_million
+removeNAicu = originalCovid %>%
+  drop_na(weekly_icu_admissions_per_million)
+
+unique(removeNAicu$location)
+```
+```{r}
+#RemoveNA from weekly_hosp_admissions_per_million
+removeNAhosp = originalCovid %>%
+  drop_na(weekly_hosp_admissions_per_million)
+
+hospitalAdmissions = unique(removeNAhosp$location)
+```
+
+```{r}
+#RemoveNA from total_tests_per_thousand
+removeNAtest = originalCovid %>%
+  drop_na(total_tests_per_thousand)
+
+unique(removeNAtest$location)
+```
+
+```{r}
+sapply(finalData, class)
+```
+
