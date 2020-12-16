@@ -6,7 +6,7 @@
 - [ ] Create "A_extraData.csv" (Annia to compile)
     - [ ] Rebecca sends healthSecurity data
     - [ ] Rocio sends mortalityCauses data
-    - [ ] 
+    - [ ] Victor sends temperature data
 - [ ] Set up logins
     - [ ] AWS
     - [ ] Heroku
