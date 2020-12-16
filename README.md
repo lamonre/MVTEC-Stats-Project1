@@ -90,4 +90,5 @@ This will include a date field. Most likely written in Python script. Updated da
 | tdpm        | Numeric   | OWID       | Total deaths per million, cumulative. |
 | deathSmooth | Numeric   | OWID       | Daily new deaths smoothed. Avg calculated for each week. |
 
-**Output will be C_covidOK.csv**
+#### Final output for preprocessing will be "C_covidOK.csv". 
+*Please change if I got it wrong!*
