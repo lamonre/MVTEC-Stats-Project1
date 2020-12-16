@@ -16,72 +16,52 @@ names(data)  # mostrar nom colm
 
 # is R reading data correctly?
 # Has dd the correct number of ROWS and COLUMNS?
-dim(ddCovid)
-dim(ddExtra)
-n<-dim(ddCovid)[2]
-n
-K<-dim(ddExtra)[1]
-K
+dim(data)
 
 # TIPO DE OBJETO DATOS
-class(ddCovid)
-class(ddExtra)
+class(data)
 
-#check column contents
-names(ddCovid)
-View(ddCovid)
+#check table
+View(data)
 
 #open access by name to columns
-attach(ddCovid)
-attach(ddExtra)
+attach(data)
 ?attach
 
 #are all columns of expected types?
+sapply(data, class)
 
-#summary(Dictamen)
-#boxplot(Dictamen)
-#class(dd[,1])
-#class(Dictamen)
-sapply(ddCovid, class)
-sapply(ddExtra,class)
+# reduir la bd eliminant colm --> https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html 
+data <- subset(data, select = -c(total_cases, new_cases, total_deaths, new_deaths, new_cases_per_million, new_deaths_per_million, icu_patients, hosp_patients, total_tests, new_tests, new_tests_per_thousand, positive_rate:stringency_index, aged_65_older, aged_70_older, extreme_poverty, diabetes_prevalence, female_smokers, male_smokers, life_expectancy, human_development_index))
+names(data)  # mostrar nom colm
 
 
-HospitalAdmisions <- as.numeric(weekly_hosp_admissions)
+## DATES ##
+class(data$date)  # --> ha ser data i no caràcter
+library(lubridate)
+data$date <- ymd(data$date)
+class(data$date)
 
-# R knows that Dictament is not numeric now
-mean(HospitalAdmisions)
+# x saber quants NA hi ha per colm
+apply(is.na(data), 2, sum)
 
-class(HospitalAdmisions)
-table(HospitalAdmisions)
-sapply(HospitalAdmisions,class)
+#### causes deaths ####
+library(readxl)
+dataDeaths <- read_excel("additionalData/data_mortality_causes_WHO_2016/data_mortality_causes_OK.xlsx")
+head(dataDeaths)
+View(dataDeaths)
 
-# Crear una nueva columna
-# actives<-c(2:14)
-# dd2<-dd
-# dd<-dd[,actives]
+sapply(dataDeaths, class)
 
-#consistency issues derived from "attach" function
-class(HospitalAdmisions)
-class(dd[,1])
-summary(ddCovid$weekly_hosp_admissions)
-summary(HospitalAdmisions)
-summary(dd[,1])
-barplot(table(Dictamen))
-pie(table(Dictamen))
+# canviar nom colm
+dataDeaths <- rename(dataDeaths, Bothsexes = `Both sexes`)
+head(dataDeaths)
+
+#####################################################################
 
 # interpolate data para llenar datos NA
 # imputeTS library
 # https://www.rdocumentation.org/packages/imputeTS/versions/3.1
-
-#internal coertion. NOT ALWAYS
-barplot(table(dd[,1]))
-
-#INTERPRETABILITY, EXPLAINABILITY
-#labelling modalities. Check metadata. 
-#WARNING: Sequential assignment with levels
-
-levels(Dictamen) <- c(NA, "positiu","negatiu")
-table(Dictamen)
 
 #care with missing data!!!!
 table(Dictamen, useNA="ifany")
@@ -93,48 +73,7 @@ Tipo.trabajo<-factor(Tipo.trabajo, levels=c( "1", "2", "3", "4", "0"), labels=c(
 pie(table(Tipo.trabajo))
 barplot(table(Tipo.trabajo))
 
-#zoom the barplot to see all levels in the X axis
 
-#ordering modalities! For ordinal variables 
-Tipo.trabajo <- factor(Tipo.trabajo, ordered=TRUE,  levels= c("WorkingTypeUnknown","temporal","fixe","autonom","altres sit"))
-frecs<-table(Tipo.trabajo)
-barplot(frecs)
-
-#recodificacions. Find short acronims of modalities for efficient data visualitation
-print(frecs)
-newvalues<-c("WTUnk","Fix","Temp","Auto","Other")
-Tipo.trabajo <- newvalues[ match(Tipo.trabajo,
-                                 c("WorkingTypeUnknown","fixe",                                             
-                                   "temporal","autonom","altres sit"
-                                 )
-) 
-]
-
-table(Tipo.trabajo)
-frecs<-table(Tipo.trabajo)
-barplot(frecs, las=3, cex.names=0.7, main=paste("Barplot of", "Tipo.trabajo"))
-
-#labelling of other factors in the dataset, be sure your assignment corresponds with the order of modalities
-#if you doubt, use the match instruction shown above
-
-levels(Vivienda) <- c("VivUnkown", "lloguer","escriptura","contr_privat","ignora_cont","pares","altres viv")
-levels(Estado.civil) <- c("ECUnknown", "solter","casat","vidu","separat","divorciat")
-levels(Registros) <- c("reg_no","reg_si")
-
-#propagate preprocessing to dataframe
-class(Dictamen)
-class(dd[,1])
-dd[,1]<-Dictamen
-class(dd[,1])
-
-dd[,3]<-Vivienda
-dd[,6]<-Estado.civil
-dd[,7]<-Registros
-dd[,8]<-Tipo.trabajo
-
-class(dd[,1])
 
 #Export pre-processed data to persistent files, independent from statistical package
 write.table(dd, file = "credscoCategoriques.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
-
-K
