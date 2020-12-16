@@ -61,7 +61,7 @@ One is a static file that will be uploaded one time (A_extraData.csv). The other
 There will be no date field. It is uploaded once.
 
 | Variables     | Type      | Origin    | Description      |
-| ------------- |:--------: |:--------: | :-----        |
+| :------------ |:--------: |:--------: | :----- |
 | **country**   | Identifier| OWID      | Joining variable. |
 | population    | Numeric   | OWID      | Population of country. |
 | popDensity    | Numeric   | OWID      | Population density. |
@@ -78,7 +78,7 @@ There will be no date field. It is uploaded once.
 #### Variables in "B_covidDaily.csv"
 This will include a date field. Most likely written in Python script. Updated daily, uploaded weekly (TBC).
 | Variables   | Type      | Origin     | Description |
-| ----------- | :-------: | :---------:| ---        |
+| :---------- | :-------: | :---------:| ---        |
 | year        | Date      | Calculated | Extracted from the date field for grouping of weeks across years. |
 | week        | Date      | Calculated | Extracted, similar to year field. |
 | region      | Character | OWID       | Used for region groupings if needed. |
