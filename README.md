@@ -8,7 +8,7 @@
     - [ ] Rocio sends mortalityCauses data
     - [ ] Victor sends temperature data
 - [ ] Set up logins
-    - [ ] AWS
+    - [x] AWS (Matt will give us access to a new Bucket for each group)
     - [ ] Heroku
     - [ ] Observable?
     - [x] Email errors
