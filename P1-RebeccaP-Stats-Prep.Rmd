@@ -1,6 +1,9 @@
 ---
 title: "R Notebook - prepping data for assignment"
-output: html_notebook
+author: "Rebecca Pazos"
+output:
+  html_document:
+    df_print: paged
 ---
 Setting up my R environment
 
@@ -8,8 +11,7 @@ Setting up my R environment
 library(dplyr)
 library(tidyr)
 library(readxl)
-library(imputeTS)
-library(tseries)
+library(knitr)
 ```
 
 *Step 1*: Import 3 datasets
@@ -72,7 +74,7 @@ head(renamedData)
 apply(is.na(renamedData), 2, sum)##Checking for each column, how many rows are NAs? 
 ```
 
-*Step 6*: Group to top 40 for globally based on total cases per million, those with more than 50,000 cases and population higher than one million.
+*Step 6*: Here we can change the filters. At the moment, it is set to the top 50 globally based on total cases per million, those with more than 50,000 cases and population higher than one million.
 
 ```{r}
 #filtering dataset
@@ -100,10 +102,11 @@ finalData = renamedData %>%
   filter(country %in% selectedCountries) %>% 
   #Adding year as a field as the groupings will need to be grouped by Year > Week, not just Week.
   mutate(year = format(date, "%Y")) %>%
-  group_by(year, week, iso_code, region, country) %>%
-  filter(region == "Asia", date >= "2020-12-01") %>%
-  summarise(date = min(date), #the first date of the week
-            totalCases = max(total_cases), #
+  group_by(year, week, region, country) %>%
+  #filter(region == "Asia", date >= "2020-12-01") %>%
+  summarise(iso_code = first(iso_code),
+            date = min(date),
+            totalCases = max(total_cases),
             tcpm = max(tcpm), 
             casesSmooth = mean(casesSmooth), 
             totalDeaths = max(total_deaths), 
@@ -120,9 +123,36 @@ finalData = renamedData %>%
 head(finalData)
 ```
 
-My codebook
+## My Codebook
+
+Column Name     | Type           | Description
+--------------- | -------------- | -------------------
+year            | grouping       |
+week            | grouping       |
+region          | grouping       |
+country         | grouping       |
+iso_code        | Identifier     |
+totalCases      | Main numeric   | Cumulative cases for that country on that date
+casesSmooth     | Main numeric   | Average weekly new cases smoothed
+tcpm            | Main numeric   | Cumulative total cases per million on that date
+totalDeaths     | Main numeric   | Cumulative deaths for that country on that date
+deathSmooth     | Main numeric   | Average weekly new deaths smoothed
+population      | Additional num | Current population
+popDensity      | Additional num | Density of the population with regards to land space
+medianAge       | Additional num | Age (older or younger on average?)
+gdp             | Additional num | $
+govt            | Qualitative    | Types of government
+corruption      | Qualitative    | Highly corrupt, Less corrupt
+healthSecurity  | Qualitative    | Most prepared, More prepared, Least prepared, 
+
 ```{r}
 names(finalData)
+
+unique(finalData$govt)
+
+unique(finalData$corruption)
+
+unique(finalData$healthSecurity)
 ```
 
 *Step 8* Export FinalData
