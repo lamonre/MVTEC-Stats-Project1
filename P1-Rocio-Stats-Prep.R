@@ -2,11 +2,16 @@
 # @authors: Ànnia, Rebecca, Rocío, Victor.
 
 
-# READING DATA FROM EXCEL
+# READING DATA FROM EXCEL/CSV
 library(readr);
+library(tidyverse)
 
-ddCovid <- read_excel("originalData/owid-covid-data-131120.xlsx", col_names = TRUE, na="NA");
-ddExtra <- read_excel("originalData/country-info-clean.xlsx",col_names = TRUE, na="NA");
+data <- read.csv("originalData/owid-covid-data.csv")
+head(data)   # mostrar 10 1es files cada colm
+names(data)  # mostrar nom colm
+
+#ddCovid <- read_excel("originalData/owid-covid-data-131120.xlsx", col_names = TRUE, na="NA");
+#ddExtra <- read_excel("originalData/country-info-clean.xlsx",col_names = TRUE, na="NA");
 
 
 # is R reading data correctly?
