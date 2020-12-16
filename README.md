@@ -12,17 +12,20 @@
     - [ ] Heroku
     - [ ] Observable?
     - [x] Email errors
-- [ ] Figure out how to upload A_extraData.csv
+- [x] Figure out how to upload A_extraData.csv
 - [ ] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
 - [ ] Create scripts to join A & B, output C for next stage
 
 ## Questions to Matt:
-- Show diagram and make sure we are going in the right direction.
+- Show diagram and make sure we are going in the right direction. Maybe some tips to simplify the workflow.
 - Should we try read the daily data directly into R, or should we use Python instead? For B_covidDaily.csv.
+*It's better to use Python (like we have at the diagram it's OK)*
 - Save the CSV directly from R to S3, avoid having to write Python script? Or should we be putting more Python scripts in for error checks?
+*Yes we can -> https://www.rdocumentation.org/packages/AnnotationHub/versions/2.4.2/topics/upload_to_S3*
 - Should we grab the data daily(or weekly??), and then only upload weekly, or should we also do this daily?
+*Daily*
 - Should we use the Heroku scheduler multiple times? Or can we only run it once? Will this start charging us? How can we track?
-- Maybe some tips to simplify the workflow.
+
 
 ## Data focus
 We have decided to limit our analysis to the countries that have sufficient data for **hospital beds** and **weekly hospital admissions**. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
