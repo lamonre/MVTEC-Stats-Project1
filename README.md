@@ -3,6 +3,7 @@
 ###### Update: Thurs, Dec 17, 2020
 
 ## Task List:
+Pre-processing Project Board [here](https://github.com/arixha/MVTEC-Stats-Project1/projects/1)
 - [ ] Create "A_extraData.csv" (Annia to compile)
     - [x] Rebecca sends healthSecurity data
     - [ ] Rocio sends mortalityCauses data
