@@ -1,6 +1,6 @@
 ## Completed tasks
 
-Wed Dec 16
+*Wed Dec 16*
 - [x] Set up logins
     - [x] AWS (Matt will give us access to a new Bucket for each group)
     - [x] Heroku

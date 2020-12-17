@@ -11,6 +11,7 @@
 - [ ] Upload "A_extraData.csv" to S3 via Python script
 - [ ] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
 - [ ] Create scripts to join A & B, output C for next stage
+- [ ] Decide how to handle errors for country names. The latest CSV pulled from OWID github had 'Czech Republic' as 'Czechia'. This could cause problems.
 
 ## Data focus
 We have decided to limit our analysis to the countries that have sufficient data for **hospital beds** and **weekly hospital admissions**. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
