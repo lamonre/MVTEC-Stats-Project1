@@ -7,5 +7,6 @@ removeNA = originalCovid %>%
     drop_na(weekly_hosp_admissions_per_million, hospital_beds_per_thousand)
 
 countries = unique(removeNA$location)
-length(countries)
-print(countries)
+
+length(countries) #check how many countries
+print(countries) #check country names

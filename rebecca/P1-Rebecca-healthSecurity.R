@@ -3,8 +3,7 @@ library(tidyr)
 
 ghsIndex = read.csv(file = "additionalData/globalSecurityIndex .csv")
 
-countries = c("Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "France", "Greece", "Germany", "Iceland", "Ireland", "Latvia", "Lithuania", "Malta", "Netherlands", "Portugal", "Romania", "Slovenia", "Spain", "Sweden", "United Kingdom", "United States")
-
+countries = c("Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "France", "Germany", "Iceland", "Ireland", "Latvia", "Lithuania", "Malta", "Netherlands", "Norway", "Portugal", "Romania", "Slovenia", "Spain", "United Kingdom", "United States")
 
 healthSecurity = ghsIndex %>%
         filter(Country %in% countries)  %>%
