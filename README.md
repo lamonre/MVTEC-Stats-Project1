@@ -4,13 +4,13 @@
 
 ## Task List:
 - [ ] Create "A_extraData.csv" (Annia to compile)
-    - [ ] Rebecca sends healthSecurity data
+    - [x] Rebecca sends healthSecurity data
     - [ ] Rocio sends mortalityCauses data
     - [ ] Victor sends temperature data
-- [ ] Set up logins
+- [x] Set up logins
     - [x] AWS (Matt will give us access to a new Bucket for each group)
-    - [ ] Heroku
-    - [ ] Observable?
+    - [x] Heroku
+    - [x] Observable: For now we will use our own accounts. If we need to setup a universal account we can.
     - [x] Email errors
 - [x] Figure out how to upload A_extraData.csv
 - [ ] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
@@ -30,29 +30,7 @@
 ## Data focus
 We have decided to limit our analysis to the countries that have sufficient data for **hospital beds** and **weekly hospital admissions**. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
 
-countries = [
-            Belgium, 
-            Croatia, 
-            Cyprus, 
-            Czech Republic, 
-            Denmark,
-            Estonia,
-            France,
-            Greece, 
-            Germany,
-            Iceland,
-            Ireland,
-            Latvia, 
-            Lithuania,
-            Malta,
-            Netherlands,
-            Portugal, 
-            Romania,
-            Slovenia,
-            Spain,
-            Sweden,
-            United Kingdom,
-            United States]
+countries = c("Belgium", "Croatia", "Cyprus", "Czech Republic", "Denmark", "Estonia", "France", "Germany", "Iceland", "Ireland", "Latvia", "Lithuania", "Malta", "Netherlands", "Norway", "Portugal", "Romania", "Slovenia", "Spain", "United Kingdom", "United States")
 
 ## Pre-processing
 
