@@ -3,22 +3,22 @@
     "path": "~/Desktop/MVTEC/Statistical Programming/projecte/MVTEC-Stats-Project1/P1-Rocio-Stats-Prep.R",
     "project_path": "P1-Rocio-Stats-Prep.R",
     "type": "r_source",
-    "hash": "2261137855",
+    "hash": "0",
     "contents": "",
-    "dirty": false,
+    "dirty": true,
     "created": 1607092919268.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
-        "cursorPosition": "59,0",
-        "scrollLine": "37"
+        "cursorPosition": "8,0",
+        "scrollLine": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1608120055,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1608120055581,
+    "last_content_update": 1608323724448,
     "read_only": false,
     "read_only_alternatives": []
 }

@@ -56,6 +56,10 @@ sapply(dataDeaths, class)
 # canviar nom colm
 dataDeaths <- rename(dataDeaths, Bothsexes = `Both sexes`)
 head(dataDeaths)
+class(dataDeaths)
+
+dataDeathsCountriesSelected <- filter(dataDeaths, Country %in% c("Belgium", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "France", "Germany", "Iceland", "Ireland", "Latvia", "Lithuania", "Malta", "Netherlands", "Norway", "Portugal", "Romania", "Slovenia", "Spain", "United Kingdom of Great Britain and Northern Ireland", "United States of America"))
+View(dataDeathsCountriesSelected)
 
 #####################################################################
 
