@@ -7,6 +7,7 @@ import logging
 import boto3
 from botocore.exceptions import ClientError
 from config import bucket, folder, region
+from io import BytesIO
 
 #load local environment variables
 load_dotenv()
@@ -24,9 +25,10 @@ try:
     df = c[c['location'].isin(countries)]
     # df['year'] = df['date'].dt.year
     # df['week'] = df['date'].dt.week
-    
+    # csv_buffer = BytesIO()
+    df2csv = df.to_csv(index=False)
     logging.info("starting upload")
-    upload_to_s3(body=df, filename='/data/B_covidDaily.csv')
+    upload_to_s3(body=df2csv, filename='B_covidDaily.csv')
     logging.info("Success!")
 
 except Exception as e:

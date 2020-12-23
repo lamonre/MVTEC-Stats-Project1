@@ -1,7 +1,7 @@
 folder="rawdata"
 
-bucket="test-mvtec-2020-covid"
-region="us-east-1"
+bucket="mvtec-group2"
+region="eu-west-1"
 
 # some logging config
 import logging, sys
