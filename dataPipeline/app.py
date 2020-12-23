@@ -1,5 +1,5 @@
 import pandas as pd
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 from email_cred import send_mail
 from upload_to_s3 import upload_to_s3
@@ -9,8 +9,8 @@ from botocore.exceptions import ClientError
 from config import bucket, folder, region
 
 #load local environment variables
-# load_dotenv()
-# IS_DEV = os.getenv('IS_DEV')
+load_dotenv()
+IS_DEV = os.getenv('IS_DEV')
 
 #for Heroku console
 logging.info("Starting....")
