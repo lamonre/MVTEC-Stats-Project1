@@ -8,9 +8,9 @@ Pre-processing Project Board [here](https://github.com/arixha/MVTEC-Stats-Projec
     - [x] Rebecca sends healthSecurity data
     - [ ] Rocio sends mortalityCauses data
     - [ ] Victor sends temperature data
-- [ ] Get AWS credentials from Matt
+- [x] Get AWS credentials from Matt
 - [ ] Upload "A_extraData.csv" to S3 via Python script
-- [ ] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
+- [x] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
 - [ ] Create scripts to join A & B, output C for next stage
 - [ ] Decide how to handle errors for country names. The latest CSV pulled from OWID github had 'Czech Republic' as 'Czechia'. This could cause problems.
 
