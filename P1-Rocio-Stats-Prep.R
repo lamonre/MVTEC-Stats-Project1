@@ -2,7 +2,11 @@
 # @authors: Ànnia, Rebecca, Rocío, Victor.
 
 
-# READING DATA FROM EXCEL/CSV
+
+############################################################
+############ READING DATA FROM EXCEL/CSV COVID ############
+############################################################
+
 library(readr);
 library(tidyverse)
 
@@ -32,20 +36,119 @@ attach(data)
 sapply(data, class)
 
 # reduir la bd eliminant colm --> https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html 
-data <- subset(data, select = -c(total_cases, new_cases, total_deaths, new_deaths, new_cases_per_million, new_deaths_per_million, icu_patients, hosp_patients, total_tests, new_tests, new_tests_per_thousand, positive_rate:stringency_index, aged_65_older, aged_70_older, extreme_poverty, diabetes_prevalence, female_smokers, male_smokers, life_expectancy, human_development_index))
-names(data)  # mostrar nom colm
+data <- subset(data, select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases_smoothed, reproduction_rate, total_deaths, total_deaths_per_million, new_deaths_smoothed, weekly_hosp_admissions_per_million, hospital_beds_per_thousand, population, population_density, median_age, gdp_per_capita))  # mostrar nom colm
+head(data)
 
-
-## DATES ##
+## dates ##
 class(data$date)  # --> ha ser data i no caràcter
 library(lubridate)
-data$date <- ymd(data$date)
+#data$date <- ymd(data$date)
+data$date <- as.Date(data$date, format="%Y-%m-%d")
 class(data$date)
 
 # x saber quants NA hi ha per colm
-apply(is.na(data), 2, sum)
+apply(is.na(data), 2, sum) # 2 = columnes
 
-#### causes deaths ####
+## DATA EXTRA KARINA
+dataExtra <- read_excel("originalData/country-info.xlsx")
+head(dataExtra)   # mostrar 10 1es files c
+
+dataExtra <- subset(dataExtra, select = c(COUNTRY, Government_Type, Corruption_preception))  # mostrar nom colm
+head(dataExtra)
+
+dataExtra <- rename(dataExtra, country = COUNTRY, gov = Government_Type, corruption = Corruption_preception)
+head(dataExtra)
+
+## DATA OBESITY
+ob <- read.csv("additionalData/obesitat.csv") 
+sapply(ob, class)
+
+# renaming columns
+ob <- rename(ob, country = Entity, code = Code, year = Year, share = Prevalence.of.obesity..both.sexes....WHO..2019.)
+
+# taking 2016 year values only
+ob <- filter(ob, year==2016) 
+
+# removing some rows that don't serve
+ob <- ob[!(ob$country=="Africa" | ob$country=="Americas" | ob$country=="Eastern Mediterranean" | ob$country=="Europe" | ob$country=="Global" | ob$country=="South-East Asia" | ob$country=="Western Pacific"),]
+head(ob)
+
+
+### JOIN three datasets
+# obesity + info paisos extra
+obExtra <- left_join(ob, dataExtra, by = "country")
+head(obExtra)
+
+# obesity + info paisos extra + covid data
+data <- rename(data, code = iso_code)
+dataOk <- left_join(data, obExtra, by = "code")
+head(dataOk)
+
+write.csv(dataOk, file = "preProcessingData/covidCleanObesity.csv")
+
+### TOP 10 per Continent
+table(dataOk$continent)
+africa <- filter(dataOk, continent == "Africa")
+asia <- filter(dataOk, continent == "Asia")
+europe <- filter(dataOk, continent == "Europe")
+northAmerica <- filter(dataOk, continent == "North America")
+sudAmerica <- filter(dataOk, continent == "Sud America")
+oceania <- filter(dataOk, continent == "Oceania")
+
+africa <- arrange(africa, desc(total_cases_per_million))
+asia <- arrange(asia, desc(total_cases_per_million))
+europe <- arrange(europe, desc(total_cases_per_million))
+northAmerica <- arrange(northAmerica, desc(total_cases_per_million))
+sudAmerica <- arrange(sudAmerica, desc(total_cases_per_million))
+oceania <- arrange(oceania, desc(total_cases_per_million))
+
+class(europe$location)
+europe$location <- as.factor(europe$location)
+africa$location <- as.factor(africa$location)
+asia$location <- as.factor(asia$location)
+northAmerica$location <- as.factor(northAmerica$location)
+sudAmerica$location <- as.factor(sudAmerica$location)
+oceania$location <- as.factor(oceania$location)
+class(europe$location)
+
+eu10 <- subset(europe, select = c(location, total_cases_per_million))
+#na.rm = borra los NA
+eu10 <- eu10 %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+africa10 <- africa %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+asia10 <- asia %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+northA10 <- northAmerica %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+sudA10 <- sudAmerica %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+oce10 <- oceania %>% 
+  group_by(location) %>% 
+  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
+  arrange(desc(mean_tcpm))
+
+
+########################################################################
+############ READING DATA FROM EXCEL/CSV EXTRA CAUSES DEATH ############
+########################################################################
+
+
 library(readxl)
 dataDeaths <- read_excel("additionalData/data_mortality_causes_WHO_2016/data_mortality_causes_OK.xlsx")
 head(dataDeaths)
@@ -56,6 +159,10 @@ sapply(dataDeaths, class)
 # canviar nom colm
 dataDeaths <- rename(dataDeaths, Bothsexes = `Both sexes`)
 head(dataDeaths)
+class(dataDeaths)
+
+dataDeathsCountriesSelected <- filter(dataDeaths, Country %in% c("Belgium", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "France", "Germany", "Iceland", "Ireland", "Latvia", "Lithuania", "Malta", "Netherlands", "Norway", "Portugal", "Romania", "Slovenia", "Spain", "United Kingdom of Great Britain and Northern Ireland", "United States of America"))
+View(dataDeathsCountriesSelected)
 
 #####################################################################
 

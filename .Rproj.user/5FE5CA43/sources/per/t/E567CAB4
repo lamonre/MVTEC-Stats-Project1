@@ -1,0 +1,25 @@
+{
+    "id": "E567CAB4",
+    "path": "~/Desktop/MVTEC/Statistical Programming/projecte/MVTEC-Stats-Project1/preProcessingData/2_top10covid.R",
+    "project_path": "preProcessingData/2_top10covid.R",
+    "type": "r_source",
+    "hash": "2802693257",
+    "contents": "",
+    "dirty": false,
+    "created": 1608472362298.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "tempName": "Untitled1",
+        "cursorPosition": "11,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1608473688,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1608473688239,
+    "read_only": false,
+    "read_only_alternatives": []
+}
