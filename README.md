@@ -15,9 +15,10 @@ Pre-processing Project Board [here](https://github.com/arixha/MVTEC-Stats-Projec
 - [ ] Decide how to handle errors for country names. The latest CSV pulled from OWID github had 'Czech Republic' as 'Czechia'. This could cause problems.
 
 ## Data focus
-We have decided to limit our analysis to the countries that have sufficient data for **hospital beds** and **weekly hospital admissions**. This is provided only by the European and US data centres for certain countries therefore our analysis is limited to the following 22 countries:
+We have decided to limit our analysis to the top 10 countries for each region which have the highest number of total cases per million.
 
 *Last updated on Thurs Dec 27*
+
 countriesAfrica = c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia") 
 
 countriesEurope = c("Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland")
