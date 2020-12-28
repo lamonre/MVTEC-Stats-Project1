@@ -4,14 +4,15 @@
 
 ## Task List:
 Pre-processing Project Board [here](https://github.com/arixha/MVTEC-Stats-Project1/projects/1)
-- [ ] Create "A_extraData.csv" (Annia to compile)
+- [ ] Create "A_covidDaily.csv" (Annia to compile)
     - [x] Rebecca sends healthSecurity data
-    - [ ] Rocio sends mortalityCauses data
+    - [x] Rocio sends mortalityCauses data
     - [ ] Victor sends temperature data
 - [x] Get AWS credentials from Matt
-- [ ] Upload "A_extraData.csv" to S3 via Python script
+- [ ] Upload "A_covidDaily.csv" to S3 via Python script
+- [ ] Download "A_covidDaily.csv" to R from S3
 - [x] Create Python script to read CovidDaily data and output data we need to S3 bucket to create "B_covidDaily.csv"
-- [ ] Create scripts to join A & B, output C for next stage
+- [ ] ?? Create scripts to join A & B, output C for next stage
 - [ ] Decide how to handle errors for country names. The latest CSV pulled from OWID github had 'Czech Republic' as 'Czechia'. This could cause problems.
 
 ## Data focus
