@@ -49,7 +49,8 @@ class(data$date)
 # x saber quants NA hi ha per colm
 apply(is.na(data), 2, sum) # 2 = columnes
 
-## DATA EXTRA KARINA
+
+########### DATA EXTRA KARINA ##################
 dataExtra <- read_excel("originalData/country-info.xlsx")
 head(dataExtra)   # mostrar 10 1es files c
 
@@ -59,7 +60,8 @@ head(dataExtra)
 dataExtra <- rename(dataExtra, country = COUNTRY, gov = Government_Type, corruption = Corruption_preception)
 head(dataExtra)
 
-## DATA OBESITY
+
+########### DATA OBESITY ########### 
 ob <- read.csv("additionalData/obesitat.csv") 
 sapply(ob, class)
 
@@ -86,7 +88,8 @@ head(dataOk)
 
 write.csv(dataOk, file = "preProcessingData/covidCleanObesity.csv")
 
-### TOP 10 per Continent
+
+##############  TOP 10 per Continent ########### 
 table(dataOk$continent)
 africa <- filter(dataOk, continent == "Africa")
 asia <- filter(dataOk, continent == "Asia")
