@@ -8,7 +8,7 @@
 ############################################################
 
 library(readr);
-library(tidyverse)
+library(tidyverse);
 
 data <- read.csv("A-covidDaily.csv")
 head(data)   # mostrar 10 1es files cada colm
@@ -31,9 +31,13 @@ attach(data)
 #are all columns of expected types?
 sapply(data, class)
 
+# ens quedem amb les columnes que tenen menys NA's
+apply(
+  is.na
+  (data), 2, mean)
+
 # reduir la bd eliminant colm --> https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html 
-data <- subset(data, select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases_smoothed, reproduction_rate, total_deaths, total_deaths_per_million, new_deaths_smoothed, hospital_beds_per_thousand, population, population_density, median_age, gdp_per_capita))  # mostrar nom colm
-head(data)
+data <- subset(data, select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases, reproduction_rate, total_deaths, total_deaths_per_million, new_deaths, hospital_beds_per_thousand, total_tests, total_tests_per_thousand, population, population_density, median_age, gdp_per_capita))
 
 ## dates ##
 class(data$date)  # --> ha ser data i no caràcter
@@ -55,7 +59,8 @@ ob <- read.csv("obesitat.csv")
 sapply(ob, class)
 
 # renaming columns
-ob <- rename(ob, country = Entity, code = Code, year = Year, share = Prevalence.of.obesity..both.sexes....WHO..2019.)
+ 
+ob <- rename(ob, country = Entity, code = Code, year = Year, obesity = Prevalence.of.obesity..both.sexes....WHO..2019.)
 
 # taking 2016 year values only
 ob <- filter(ob, year==2016) 
@@ -75,8 +80,7 @@ head(dataDeaths)
 #View(dataDeaths)
 
 # renaming columns
-dataDeaths <- rename(dataDeaths, country = Country, causes = Causes, numDeathsOther = Both.sexes)
-head(dataDeaths)
+dataDeaths <- rename(dataDeaths, location = Country, causes = Causes, numDeathsOther = Both.sexes)
 
 sapply(dataDeaths, class)
 
@@ -84,30 +88,74 @@ sapply(dataDeaths, class)
 dataDeaths <- dataDeaths[,-2]
 head(dataDeaths)
 
+library(reshape2)
+dataDeathsOk <- dcast(dataDeaths,location~causes)
+head(dataDeathsOk)
+class(dataDeathsOk)
+dataDeathsOk <- rename(dataDeathsOk, cardiovascular_deaths = "Cardiovascular diseases", pulmonary_deaths = "Chronic obstructive pulmonary disease", diabetes_deaths = "Diabetes mellitus", cancer_deaths = "Malignant neoplasms")
+names(dataDeathsOk)
+
+# top 10 countries
+top10Deaths <- dataDeathsOk %>% 
+  filter(location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia", 
+                         "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudi Arabia", "United Arab Emirates", 
+                         "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland", 
+                         "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
+                         "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu",
+                         "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana"))
+
+head(top10Deaths)
 
 ############################################################
-############     JOIN COVID + EXTRA DATA        ############
+############      READING DATA REBECCA          ############
 ############################################################
+
+
+############################################################
+############   READING DATA TEMPERATURE        ############
+############################################################
+
+
+############################################################
+############     JOIN COVID + ALL EXTRA DATA   ############
+############################################################
+
+# info countries extra - Karina#
+library(readxl)    # x poder llegir arxiu, q és xlsx
+pp <- read_excel("country-info.xlsx")
+
+head(pp)
+sapply(pp, class)
+
+# seleccionar colm ok
+pp <- subset(pp, select = c(COUNTRY, Government_Type, Corruption_preception))
+# tmb es podria fer amb pp <- select(pp, COUNTRY, Government_Type, Corruption_preception)
+
+# canviar nom colm
+pp <- rename(pp, country = COUNTRY, gov = Government_Type, corruption = Corruption_preception)
 
 # obesity + info paisos extra
-obExtra <- left_join(ob, dataExtra, by = "country")
+obExtra <- left_join(ob, pp, by = "country")
 head(obExtra)
 
 # obesity + info paisos extra + covid data
 data <- rename(data, code = iso_code)
 dataOk <- left_join(data, obExtra, by = "code")
+dataOk <- subset(dataOk, select = -c(country,year)) 
 head(dataOk)
 
-write.csv(dataOk, file = "preProcessingData/covidCleanObesity.csv")
+
+####################################################
+############     TOP 10 per Continent   ############
+####################################################
 
 
-##############  TOP 10 per Continent ########### 
 table(dataOk$continent)
 africa <- filter(dataOk, continent == "Africa")
 asia <- filter(dataOk, continent == "Asia")
 europe <- filter(dataOk, continent == "Europe")
 northAmerica <- filter(dataOk, continent == "North America")
-sudAmerica <- filter(dataOk, continent == "Sud America")
+sudAmerica <- filter(dataOk, continent == "South America")
 oceania <- filter(dataOk, continent == "Oceania")
 
 africa <- arrange(africa, desc(total_cases_per_million))
@@ -158,6 +206,16 @@ oce10 <- oceania %>%
   summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
   arrange(desc(mean_tcpm))
 
+top10 <- filter(dataOk, location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", 
+                                      "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Georgia", "United Arab Emirates", 
+                                      "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", 
+                                      "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
+                                      "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
+                                      "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana"))
+
+
+write.csv(top10, file = "top10Data.csv")
+
 
 
 
@@ -168,16 +226,14 @@ oce10 <- oceania %>%
 # https://www.rdocumentation.org/packages/imputeTS/versions/3.1
 
 #care with missing data!!!!
-table(Dictamen, useNA="ifany")
+#table(Dictamen, useNA="ifany")
 
 #What about ORDINAL VARIABLES?
-barplot(table(Tipo.trabajo))
+#barplot(table(Tipo.trabajo))
 
-Tipo.trabajo<-factor(Tipo.trabajo, levels=c( "1", "2", "3", "4", "0"), labels=c("fixe","temporal","autonom","altres sit", "WorkingTypeUnknown"))
-pie(table(Tipo.trabajo))
-barplot(table(Tipo.trabajo))
-
-
+#Tipo.trabajo<-factor(Tipo.trabajo, levels=c( "1", "2", "3", "4", "0"), labels=c("fixe","temporal","autonom","altres sit", "WorkingTypeUnknown"))
+#pie(table(Tipo.trabajo))
+#barplot(table(Tipo.trabajo))
 
 #Export pre-processed data to persistent files, independent from statistical package
-write.table(dd, file = "credscoCategoriques.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
+#write.table(dd, file = "credscoCategoriques.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)

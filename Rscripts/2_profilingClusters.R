@@ -10,155 +10,94 @@
 library(readr);
 library(tidyverse)
 
-data <- read.csv("top10Data.csv")
-data <- subset(data, select = -c(X))
-head(data)   # mostrar 10 1es files cada colm
-names(data)  # mostrar nom colm
-
-top10 <- filter(data, location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia", 
-                                      "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudi Arabia", "United Arab Emirates", 
-                                      "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland", 
-                                      "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
-                                      "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu",
-                                      "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana"))
-
-top10 <- subset(top10, select = -c(country,year)) 
-top10 <- rename(top10, obesity = share)
-head(top10)
-str(top10)
-top10$date <- as.Date(top10$date, format="%Y-%m-%d")
-class(top10$date)
+top10 <- read.csv("top10Data.csv")
+top10 <- subset(top10, select = -c(X))
+head(top10)   # mostrar 10 1es files cada colm
+names(top10)  # mostrar nom colm
 
 
-# Top10b = Taula amb les mitjanes x Total cases x million
-top10b <- top10 %>% 
+
+# top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
+top10cluster <- top10 %>%
   group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
-  summarise(data = first(date),
-            m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
+  summarise(m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
             total_cases = mean(total_cases, na.rm = TRUE),
+            new_cases = mean(new_cases, na.rm = TRUE),
             reproduction_rate = mean(reproduction_rate, na.rm = TRUE),
             total_deaths = mean(total_deaths, na.rm = TRUE),
             total_deaths_per_million = mean(total_deaths_per_million, na.rm = TRUE),
-            new_cases_smoothed = mean(new_cases_smoothed, na.rm = TRUE)) %>%
-  arrange(desc(m_tcpm)) # ordenat per Total cases x million
-
-head(top10b)
-str(top10b) # x veure tipus dada. x clust: caràcters han ser factors 
-top10b$location <- as.factor(top10b$location)
-class(top10b$location)
-top10b$continent <- as.factor(top10b$continent)
-class(top10b$continent)
-top10b$data <- as.Date(top10b$data, format="%Y-%m-%d")
-class(top10b$data)
-
-
-# Top10c 
-top10c <- top10 %>% 
-  group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
-  summarise(data = first(date), 
-            total_cases_per_million = mean(total_cases_per_million, na.rm = TRUE),  
-            total_cases = mean(total_cases, na.rm = TRUE),
-            new_cases_smoothed = mean(new_cases_smoothed, na.rm = TRUE),
-            reproduction_rate = mean(reproduction_rate, na.rm = TRUE),
-            total_deaths = mean(total_deaths, na.rm = TRUE),
-            total_deaths_per_million = mean(total_deaths_per_million, na.rm = TRUE),
+            new_deaths = mean(new_deaths, na.rm = TRUE),
             hospital_beds_per_thousand = mean(hospital_beds_per_thousand, na.rm = TRUE),
+            total_tests = mean(total_tests, na.rm = TRUE),
+            total_tests_per_thousand = mean(total_tests_per_thousand, na.rm = TRUE),
             population = first(population),
             population_density = first(population_density),
             median_age = first(median_age),
             gdp_per_capita = first(gdp_per_capita),
-            obesity = first(obesity)) %>%
+            obesity = first(obesity),
+            corruption = first(corruption),
+            gov = first(gov)) %>%
   arrange(desc(m_tcpm))
 
-# Top10noData 
-top10noData <- top10 %>% 
-  group_by(code, location, continent) %>% 
-  summarise(total_cases_per_million = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
-          hospital_beds_per_thousand = mean(hospital_beds_per_thousand, na.rm = TRUE),
-          population = first(population),
-          population_density = first(population_density),
-          median_age = first(median_age),
-          gdp_per_capita = first(gdp_per_capita),
-          obesity = first(obesity),
-          corruption = first(corruption),
-          gov = first(gov)) %>%
-  arrange(desc(total_cases_per_million))
+# Transform na & nan to 0 or "no data"
+top10cluster$obesity[is.na(top10cluster$obesity)] <- 0
+top10cluster$population_density[is.na(top10cluster$population_density)] <- 0
+top10cluster$median_age[is.na(top10cluster$median_age)] <- 0
+top10cluster$gdp_per_capita[is.na(top10cluster$gdp_per_capita)] <- 0
+top10cluster$corruption[is.na(top10cluster$corruption)] <- "no data"
+top10cluster$gov[is.na(top10cluster$gov)] <- "no data"
+top10cluster$reproduction_rate[is.nan(top10cluster$reproduction_rate)] <- 0
+top10cluster$total_deaths[is.nan(top10cluster$total_deaths)] <- 0
+top10cluster$total_deaths_per_million[is.nan(top10cluster$total_deaths_per_million)] <- 0
+top10cluster$hospital_beds_per_thousand[is.nan(top10cluster$hospital_beds_per_thousand)] <- 0
+top10cluster$total_tests_per_thousand[is.nan(top10cluster$total_tests_per_thousand)] <- 0
+top10cluster$total_tests[is.nan(top10cluster$total_tests)] <- 0
+top10cluster$new_deaths[is.nan(top10cluster$new_deaths)] <- 0
+
+# Comprovem que no hi ha na's
+apply(
+  is.na
+  (top10cluster), 2, mean)
   
-str(top10noData) # x veure tipus dada. x clust: caràcters han ser factors 
-top10noData$location <- as.factor(top10noData$location)
-class(top10noData$location)
-top10noData$continent <- as.factor(top10noData$continent)
-class(top10noData$continent)
-top10noData$code <- as.factor(top10noData$code)
-class(top10noData$code)
-top10noData$gov <- as.factor(top10noData$gov)
-class(top10noData$gov)
-top10noData$corruption <- as.factor(top10noData$corruption)
-class(top10noData$corruption)
+str(top10cluster) # x veure tipus dada. x clust: caràcters han ser factors 
+top10cluster$location <- as.factor(top10cluster$location)
+class(top10cluster$location)
+top10cluster$continent <- as.factor(top10cluster$continent)
+class(top10cluster$continent)
+top10cluster$code <- as.factor(top10cluster$code)
+class(top10cluster$code)
+top10cluster$gov <- as.factor(top10cluster$gov)
+class(top10cluster$gov)
+top10cluster$corruption <- as.factor(top10cluster$corruption)
+class(top10cluster$corruption)
 
 
 ############### CLUSTER ################
 
-#### Cluster 1 Mitja Total casos x million (dendograma)
+top10cluster <-top10cluster[-c(13), ]
+#top10cluster <-top10cluster[,-c(20)]
+
 library(cluster)
-top10Matrix <- daisy(top10b[,5:10], metric = "gower", stand=TRUE)
-top10dist <- top10Matrix^2
-h1 <- hclust(top10dist, method="ward.D2")
-plot(h1, labels = top10b$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
-
-# Identificar subgrups del Cluster (graficament)
-subTop10b <- cutree(h1, k=4)
-table(subTop10b)
-rect.hclust(h1, k=4, border=2:5)
-
-c_tab_continent <- table(subTop10b, top10b$continent) %>%
-  as.data.frame.matrix() %>%
-  mutate(subTop10b = c("cluster1", "cluster2", "cluster3", "cluster4")) %>%
-  select(subTop10b, everything())
-
-table(c_tab_continent)
-
-
-#### Cluster 2  (dendograma)
-top10Matrix2 <- daisy(top10c[,c(5,7:12)], metric = "gower", stand=TRUE)
-top10dist2 <- top10Matrix2^2
-h2 <- hclust(top10dist2, method="ward.D2")
-plot(h2, labels = top10c$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
-
-subTop10c <- cutree(h2, k=4)
-table(subTop10c)
-rect.hclust(h2, k=4, border=2:5)
-
-
-#### Cluster 3 top10noData(dendograma)
-top10noData$corruption <- as.factor(top10noData$corruption)
-top10noData$gov <- as.factor(top10noData$gov)
-class(top10noData$gov)
-top10Matrix3 <- daisy(top10noData[,4:12], metric = "gower", stand=TRUE)
-top10dist3 <- top10Matrix3^2
-h3 <- hclust(top10dist3, method="ward.D2")
-plot(h3, labels = top10noData$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
-
-subTop10noData <- cutree(h3, k=4)
-table(subTop10noData)
-rect.hclust(h3, k=4, border=2:5)
-
-
-#### Cluster 4 Tipo Govern y Total casos x million (dendograma)
-str(top10noData)
-top10Matrix4 <- daisy(top10noData[,c(4,12)], metric = "gower", stand=TRUE)
+str(top10cluster)
+top10Matrix4 <- daisy(top10cluster[,c(4:20)], metric = "gower", stand=TRUE)
 top10dist4 <- top10Matrix4^2
 h4 <- hclust(top10dist4, method="ward.D2")
-plot(h4, labels = top10noData$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
+plot(h4, labels = top10cluster$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
 
-cluster4 <- cutree(h4, k=4)
+cluster4 <- cutree(h4, k=6)
 table(cluster4)
-rect.hclust(h4, k=4, border=2:5)
+rect.hclust(h4, k=6, border=2:5)
+
+cluster <- cluster4
+#View(cluster)
+
+# Ajuntem la columna cluster al data frame top10cluster
+top10cluster <- cbind(top10cluster, cluster)
+top10cluster <- rename(top10cluster, cluster = "...21")
+names(top10cluster)
 
 
-
-
-############### PROFILING + KRUSKAL MODEL################
+############### PROFILING + KRUSKAL MODEL ################
 
 #Calcula els valor test de la variable Xnum per totes les modalitats del factor P
 ValorTestXnum <- function(Xnum,P){
@@ -195,8 +134,8 @@ ValorTestXquali <- function(P,Xquali){
 
 
 # put our data into Karina's variable names
-dades <- as.data.frame(top10noData)
-dd <- as.data.frame(top10noData)
+dades <- as.data.frame(top10cluster)
+dd <- as.data.frame(top10cluster)
 P <- cluster4
 n <- dim(dades)[1] #need number of rows
 nameP<-"Cluster"
@@ -207,7 +146,7 @@ pvalk <- matrix(data=0,nrow=nc,ncol=K, dimnames=list(levels(P),names(dades)))
 par(ask=TRUE)
 
 
-for(k in 2:K){
+for(k in 1:K){
   if (is.numeric(dades[,k])){ 
     print(paste("Anàlisi per classes de la Variable:", names(dades)[k]))
     
@@ -332,12 +271,12 @@ for(k in 2:K){
 
 
 #descriptors de les classes més significatius. Afegir info qualits
-for (c in 1:length(levels(as.factor(P)))) {
-  if(!is.na(levels(as.factor(P))[c])){
-    print(paste("P.values per class:",levels(as.factor(P))[c]));
-    print(sort(pvalk[c,]), digits=3) 
-  }
-}
+# for (c in 1:length(levels(as.factor(P)))) {
+#   if(!is.na(levels(as.factor(P))[c])){
+#     print(paste("P.values per class:",levels(as.factor(P))[c]));
+#     print(sort(pvalk[c,]), digits=3) 
+#   }
+# }
 
 #afegir la informacio de les modalitats de les qualitatives a la llista de pvalues i fer ordenacio global
 
@@ -350,13 +289,13 @@ for (c in 1:length(levels(as.factor(P)))) {
 ############### MODEL DE PREDICCIÓ -> LINEAL ################
 
 # Correlació i Linial Model de Predicció
-top10lm <- lm(top10b$total_cases ~ top10b$total_deaths, top10b)
-summary(top10lm)
-plot(top10lm)
-plot(top10b$total_cases, top10b$total_deaths)
-boxplot(top10b$total_cases, horizontal=TRUE, main=names(top10b)[6])
-boxplot(top10b$total_deaths,horizontal=TRUE,main=names(top10b)[9])
-hist(top10b$total_cases, breaks=15)
-hist(top10b$total_deaths,breaks=15)
-cor(dist,speed)
-cor.test(dist,speed)
+# top10lm <- lm(top10b$total_cases ~ top10b$total_deaths, top10b)
+# summary(top10lm)
+# plot(top10lm)
+# plot(top10b$total_cases, top10b$total_deaths)
+# boxplot(top10b$total_cases, horizontal=TRUE, main=names(top10b)[6])
+# boxplot(top10b$total_deaths,horizontal=TRUE,main=names(top10b)[9])
+# hist(top10b$total_cases, breaks=15)
+# hist(top10b$total_deaths,breaks=15)
+# cor(dist,speed)
+# cor.test(dist,speed)
