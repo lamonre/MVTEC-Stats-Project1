@@ -11,6 +11,8 @@ library(readr);
 library(tidyverse);
 
 data <- read.csv("A-covidDaily.csv")
+data <- rename(data, code = iso_code)
+
 head(data)   # mostrar 10 1es files cada colm
 names(data)  # mostrar nom columnes
 
@@ -37,7 +39,7 @@ apply(
   (data), 2, mean)
 
 # reduir la bd eliminant colm --> https://www.listendata.com/2015/06/r-keep-drop-columns-from-data-frame.html 
-data <- subset(data, select = c(iso_code, continent, location, date, total_cases, total_cases_per_million, new_cases, reproduction_rate, total_deaths, total_deaths_per_million, new_deaths, hospital_beds_per_thousand, total_tests, total_tests_per_thousand, population, population_density, median_age, gdp_per_capita))
+data <- subset(data, select = c(code, continent, location, date, total_cases, total_cases_per_million, new_cases, reproduction_rate, total_deaths, total_deaths_per_million, new_deaths, hospital_beds_per_thousand, total_tests, total_tests_per_thousand, population, population_density, median_age, gdp_per_capita))
 
 ## dates ##
 class(data$date)  # --> ha ser data i no caràcter
@@ -69,51 +71,67 @@ ob <- filter(ob, year==2016)
 ob <- ob[!(ob$country=="Africa" | ob$country=="Americas" | ob$country=="Eastern Mediterranean" | ob$country=="Europe" | ob$country=="Global" | ob$country=="South-East Asia" | ob$country=="Western Pacific"),]
 head(ob)
 
+ob <- subset(ob, select = -c(year))
+
 
 ############################################################
 ############   READING DATA CAUSES DEATH        ############
 ############################################################
 
 
-dataDeaths <- read.csv("data_mortality_causes_OK.csv") 
-head(dataDeaths)
+dataDeaths <- read.csv("mortality_causes.csv") 
+#head(dataDeaths)
 #View(dataDeaths)
 
-# renaming columns
+# renaming columns and rows
 dataDeaths <- rename(dataDeaths, location = Country, causes = Causes, numDeathsOther = Both.sexes)
+dataDeaths$location [dataDeaths$location == "Cabo Verde"] <- "Cape Verde"
+dataDeaths$location [dataDeaths$location == "United States of America"] <- "United States"
+dataDeaths$location [dataDeaths$location == "Republic of Moldova"] <- "Moldova"
+dataDeaths$location [dataDeaths$location == "Bolivia (Plurinational State of)"] <- "Bolivia"
 
-sapply(dataDeaths, class)
+#sapply(dataDeaths, class)
 
 # removing column year
 dataDeaths <- dataDeaths[,-2]
 head(dataDeaths)
 
 library(reshape2)
-dataDeathsOk <- dcast(dataDeaths,location~causes)
-head(dataDeathsOk)
-class(dataDeathsOk)
-dataDeathsOk <- rename(dataDeathsOk, cardiovascular_deaths = "Cardiovascular diseases", pulmonary_deaths = "Chronic obstructive pulmonary disease", diabetes_deaths = "Diabetes mellitus", cancer_deaths = "Malignant neoplasms")
-names(dataDeathsOk)
+dataDeaths <- dcast(dataDeaths,location~causes)
+head(dataDeaths)
+#class(dataDeathsOk)
+dataDeaths <- rename(dataDeaths, cardiovascular_deaths = "Cardiovascular diseases", pulmonary_deaths = "Chronic obstructive pulmonary disease", diabetes_deaths = "Diabetes mellitus", cancer_deaths = "Malignant neoplasms")
+names(dataDeaths)
 
 # top 10 countries
-top10Deaths <- dataDeathsOk %>% 
-  filter(location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia", 
-                         "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudi Arabia", "United Arab Emirates", 
-                         "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland", 
-                         "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
-                         "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu",
-                         "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana"))
+top10Deaths <- dataDeaths %>% 
+  filter(location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", 
+                         "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Georgia", "United Arab Emirates", 
+                         "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", 
+                         "Panama", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
+                         "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
+                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
+
 
 head(top10Deaths)
+top10Deaths <- rename(top10Deaths, country = location)
+
 
 ############################################################
 ############      READING DATA REBECCA          ############
 ############################################################
 
+dataSecurity <- read.csv("healthSecurity.csv") 
+head(dataSecurity)
 
 ############################################################
 ############   READING DATA TEMPERATURE        ############
 ############################################################
+
+dataTemp <- read.csv("temperatura.csv") 
+dataTemp <- subset(dataTemp, select = -c(X))
+dataTemp <- rename(dataTemp, country = Country)
+
 
 
 ############################################################
@@ -137,103 +155,34 @@ pp <- rename(pp, country = COUNTRY, gov = Government_Type, corruption = Corrupti
 # obesity + info paisos extra
 obExtra <- left_join(ob, pp, by = "country")
 head(obExtra)
+extra <- left_join(top10Deaths, dataSecurity, by = "country")
+extra <- left_join(extra, dataTemp, by = "country")
+extra <- left_join(obExtra, extra, by = "country")
 
-# obesity + info paisos extra + covid data
-data <- rename(data, code = iso_code)
-dataOk <- left_join(data, obExtra, by = "code")
-dataOk <- subset(dataOk, select = -c(country,year)) 
-head(dataOk)
-
-
-####################################################
-############     TOP 10 per Continent   ############
-####################################################
-
-
-table(dataOk$continent)
-africa <- filter(dataOk, continent == "Africa")
-asia <- filter(dataOk, continent == "Asia")
-europe <- filter(dataOk, continent == "Europe")
-northAmerica <- filter(dataOk, continent == "North America")
-sudAmerica <- filter(dataOk, continent == "South America")
-oceania <- filter(dataOk, continent == "Oceania")
-
-africa <- arrange(africa, desc(total_cases_per_million))
-asia <- arrange(asia, desc(total_cases_per_million))
-europe <- arrange(europe, desc(total_cases_per_million))
-northAmerica <- arrange(northAmerica, desc(total_cases_per_million))
-sudAmerica <- arrange(sudAmerica, desc(total_cases_per_million))
-oceania <- arrange(oceania, desc(total_cases_per_million))
-
-class(europe$location)
-europe$location <- as.factor(europe$location)
-africa$location <- as.factor(africa$location)
-asia$location <- as.factor(asia$location)
-northAmerica$location <- as.factor(northAmerica$location)
-sudAmerica$location <- as.factor(sudAmerica$location)
-oceania$location <- as.factor(oceania$location)
-class(europe$location)
-
-eu10 <- subset(europe, select = c(location, total_cases_per_million))
-#na.rm = borra los NA
-eu10 <- eu10 %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-africa10 <- africa %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-asia10 <- asia %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-northA10 <- northAmerica %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-sudA10 <- sudAmerica %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-oce10 <- oceania %>% 
-  group_by(location) %>% 
-  summarise(mean_tcpm = mean(total_cases_per_million, na.rm = TRUE)) %>% 
-  arrange(desc(mean_tcpm))
-
-top10 <- filter(dataOk, location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", 
-                                      "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Georgia", "United Arab Emirates", 
-                                      "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", 
-                                      "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
-                                      "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
-                                      "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana"))
-
-
-write.csv(top10, file = "top10Data.csv")
+# top 10 countries extra
+extra <- extra %>% 
+  filter(country %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", 
+                         "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Georgia", "United Arab Emirates", 
+                         "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", 
+                         "Panama", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
+                         "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
+                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
 
 
 
-#####################################################################
 
-# interpolate data para llenar datos NA
-# imputeTS library
-# https://www.rdocumentation.org/packages/imputeTS/versions/3.1
+# extra + covid data
+dataOk <- left_join(data, extra, by = "code")
+dataOk <- subset(dataOk, select = -c(country)) 
 
-#care with missing data!!!!
-#table(Dictamen, useNA="ifany")
+# dataOk = extra + covid
+dataOk <- dataOk %>% 
+  filter(location %in% c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", 
+                        "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Georgia", "United Arab Emirates", 
+                        "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", 
+                        "Panama", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
+                        "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
+                        "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
-#What about ORDINAL VARIABLES?
-#barplot(table(Tipo.trabajo))
-
-#Tipo.trabajo<-factor(Tipo.trabajo, levels=c( "1", "2", "3", "4", "0"), labels=c("fixe","temporal","autonom","altres sit", "WorkingTypeUnknown"))
-#pie(table(Tipo.trabajo))
-#barplot(table(Tipo.trabajo))
-
-#Export pre-processed data to persistent files, independent from statistical package
-#write.table(dd, file = "credscoCategoriques.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
+write.csv(dataOk, file = "B-top10Data.csv")

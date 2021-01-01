@@ -10,15 +10,14 @@
 library(readr);
 library(tidyverse)
 
-top10 <- read.csv("top10Data.csv")
+top10 <- read.csv("B-top10DataFixCluster.csv")
 top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
 
 
-
 # top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
-top10cluster <- top10 %>%
+top10cluster <- top10 %>% 
   group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
   summarise(m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
             total_cases = mean(total_cases, na.rm = TRUE),
@@ -35,8 +34,13 @@ top10cluster <- top10 %>%
             median_age = first(median_age),
             gdp_per_capita = first(gdp_per_capita),
             obesity = first(obesity),
+            cardiovascular_deaths = mean(cardiovascular_deaths, na.rm = TRUE),
+            pulmonary_deaths = mean(pulmonary_deaths, na.rm = TRUE),
+            diabetes_deaths = mean(diabetes_deaths, na.rm = TRUE),
+            cancer_deaths = mean(cancer_deaths, na.rm = TRUE),
             corruption = first(corruption),
-            gov = first(gov)) %>%
+            gov = first(gov),
+            healthSecurity = first(healthSecurity)) %>%
   arrange(desc(m_tcpm))
 
 # Transform na & nan to 0 or "no data"
