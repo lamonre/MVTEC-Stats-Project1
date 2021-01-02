@@ -7,19 +7,28 @@
 ############ READING DATA FROM EXCEL/CSV COVID + EXTRA ############
 ###################################################################
 
-library(readr);
+install.packages("readr") 
+install.packages("tidyverse")
+library(readr)
 library(tidyverse)
+
+
+#setwd("~/AMAZON") !!!!
 
 top10 <- read.csv("B-top10DataFixCluster.csv")
 top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
 
+library(lubridate)
+top10$date <- as.Date(top10$date, format="%Y-%m-%d")
+#hist(top10$date, breaks=4)
 
-# top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
-top10cluster <- top10 %>% 
+#top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
+top10cluster <- top10 %>%
   group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
-  summarise(m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
+  summarise(date = first(date),
+            m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
             total_cases = mean(total_cases, na.rm = TRUE),
             new_cases = mean(new_cases, na.rm = TRUE),
             reproduction_rate = mean(reproduction_rate, na.rm = TRUE),
@@ -38,10 +47,13 @@ top10cluster <- top10 %>%
             pulmonary_deaths = mean(pulmonary_deaths, na.rm = TRUE),
             diabetes_deaths = mean(diabetes_deaths, na.rm = TRUE),
             cancer_deaths = mean(cancer_deaths, na.rm = TRUE),
+            #temp = mean(AverageTemperature, na.rm = TRUE),
             corruption = first(corruption),
             gov = first(gov),
             healthSecurity = first(healthSecurity)) %>%
   arrange(desc(m_tcpm))
+
+
 
 # Transform na & nan to 0 or "no data"
 top10cluster$obesity[is.na(top10cluster$obesity)] <- 0
@@ -50,6 +62,7 @@ top10cluster$median_age[is.na(top10cluster$median_age)] <- 0
 top10cluster$gdp_per_capita[is.na(top10cluster$gdp_per_capita)] <- 0
 top10cluster$corruption[is.na(top10cluster$corruption)] <- "no data"
 top10cluster$gov[is.na(top10cluster$gov)] <- "no data"
+top10cluster$healthSecurity[is.na(top10cluster$healthSecurity)] <- "no data"
 top10cluster$reproduction_rate[is.nan(top10cluster$reproduction_rate)] <- 0
 top10cluster$total_deaths[is.nan(top10cluster$total_deaths)] <- 0
 top10cluster$total_deaths_per_million[is.nan(top10cluster$total_deaths_per_million)] <- 0
@@ -57,6 +70,11 @@ top10cluster$hospital_beds_per_thousand[is.nan(top10cluster$hospital_beds_per_th
 top10cluster$total_tests_per_thousand[is.nan(top10cluster$total_tests_per_thousand)] <- 0
 top10cluster$total_tests[is.nan(top10cluster$total_tests)] <- 0
 top10cluster$new_deaths[is.nan(top10cluster$new_deaths)] <- 0
+top10cluster$cardiovascular_deaths[is.nan(top10cluster$cardiovascular_deaths)] <- 0
+top10cluster$pulmonary_deaths[is.nan(top10cluster$pulmonary_deaths)] <- 0
+top10cluster$diabetes_deaths[is.nan(top10cluster$diabetes_deaths)] <- 0
+top10cluster$cancer_deaths[is.nan(top10cluster$cancer_deaths)] <- 0
+#top10cluster$temp[is.na(top10cluster$temp)] <- 0
 
 # Comprovem que no hi ha na's
 apply(
@@ -74,226 +92,133 @@ top10cluster$gov <- as.factor(top10cluster$gov)
 class(top10cluster$gov)
 top10cluster$corruption <- as.factor(top10cluster$corruption)
 class(top10cluster$corruption)
-
+top10cluster$healthSecurity <- as.factor(top10cluster$healthSecurity)
+class(top10cluster$healthSecurity)
+library(lubridate)
+top10cluster$date <- as.Date(top10cluster$date, format="%Y-%m-%d")
+class(top10cluster$date)
 
 ############### CLUSTER ################
 
 top10cluster <-top10cluster[-c(13), ]
-#top10cluster <-top10cluster[,-c(20)]
+top10cluster <-top10cluster[-c(15),]
 
 library(cluster)
 str(top10cluster)
-top10Matrix4 <- daisy(top10cluster[,c(4:20)], metric = "gower", stand=TRUE)
+top10Matrix4 <- daisy(top10cluster[,c(5:23)], metric = "gower", stand=TRUE)
 top10dist4 <- top10Matrix4^2
 h4 <- hclust(top10dist4, method="ward.D2")
 plot(h4, labels = top10cluster$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
 
-cluster4 <- cutree(h4, k=6)
+cluster4 <- cutree(h4, k=4)
 table(cluster4)
-rect.hclust(h4, k=6, border=2:5)
+rect.hclust(h4, k=4, border=2:5)
 
 cluster <- cluster4
 #View(cluster)
 
 # Ajuntem la columna cluster al data frame top10cluster
 top10cluster <- cbind(top10cluster, cluster)
-top10cluster <- rename(top10cluster, cluster = "...21")
+top10cluster <- rename(top10cluster, cluster = "...27")
 names(top10cluster)
 
 
 ############### PROFILING + KRUSKAL MODEL ################
-
-#Calcula els valor test de la variable Xnum per totes les modalitats del factor P
-ValorTestXnum <- function(Xnum,P){
-  #freq dis of fac
-  nk <- as.vector(table(P)); 
-  n <- sum(nk); 
-  #mitjanes x grups
-  xk <- tapply(Xnum,P,mean);
-  #valors test
-  txk <- (xk-mean(Xnum))/(sd(Xnum)*sqrt((n-nk)/(n*nk))); 
-  #p-values
-  pxk <- pt(txk,n-1,lower.tail=F);
-  for(c in 1:length(levels(as.factor(P)))){if (pxk[c]>0.5){pxk[c]<-1-pxk[c]}}
-  return (pxk)
-}
-
-
-ValorTestXquali <- function(P,Xquali){
-  taula <- table(P,Xquali);
-  n <- sum(taula); 
-  pk <- apply(taula,1,sum)/n;
-  pj <- apply(taula,2,sum)/n;
-  pf <- taula/(n*pk);
-  pjm <- matrix(data=pj,nrow=dim(pf)[1],ncol=dim(pf)[2]);      
-  dpf <- pf - pjm; 
-  dvt <- sqrt(((1-pk)/(n*pk))%*%t(pj*(1-pj))); 
-  #si hi ha divisions iguals a 0 dona NA i no funciona
-  zkj <- dpf
-  zkj[dpf!=0]<-dpf[dpf!=0]/dvt[dpf!=0]; 
-  pzkj <- pnorm(zkj,lower.tail=F);
-  for(c in 1:length(levels(as.factor(P)))){for (s in 1:length(levels(Xquali))){if (pzkj[c,s]> 0.5){pzkj[c,s]<-1- pzkj[c,s]}}}
-  return (list(rowpf=pf,vtest=zkj,pval=pzkj))
-}
-
-
-# put our data into Karina's variable names
-dades <- as.data.frame(top10cluster)
-dd <- as.data.frame(top10cluster)
-P <- cluster4
-n <- dim(dades)[1] #need number of rows
-nameP<-"Cluster"
-K <-dim(dades)[2]
-nc <- length(levels(factor(P)))
-pvalk <- matrix(data=0,nrow=nc,ncol=K, dimnames=list(levels(P),names(dades)))
-
-par(ask=TRUE)
-
-
-for(k in 1:K){
-  if (is.numeric(dades[,k])){ 
-    print(paste("Anàlisi per classes de la Variable:", names(dades)[k]))
-    
-    boxplot(dades[,k]~P, main=paste("Boxplot of", names(dades)[k], "vs", nameP ), horizontal=TRUE)
-    
-    barplot(tapply(dades[[k]], P, mean),main=paste("Means of", names(dades)[k], "by", nameP ))
-    abline(h=mean(dades[[k]]))
-    legend(0,mean(dades[[k]]),"global mean",bty="n")
-    print("Estadístics per groups:")
-    for(s in levels(as.factor(P))) {print(summary(dades[P==s,k]))}
-    o<-oneway.test(dades[,k]~P)
-    print(paste("p-valueANOVA:", o$p.value))
-    kw<-kruskal.test(dades[,k]~P)
-    print(paste("p-value Kruskal-Wallis:", kw$p.value))
-    pvalk[,k]<-ValorTestXnum(dades[,k], P)
-    print("p-values ValorsTest: ")
-    print(pvalk[,k])      
-  }else{
-    if(class(dd[,k])=="Date"){
-      print(summary(dd[,k]))
-      print(sd(dd[,k]))
-      #decide breaks: weeks, months, quarters...
-      hist(dd[,k],breaks="weeks")
-    }else{
-      #qualitatives
-      print(paste("Variable", names(dades)[k]))
-      table<-table(P,dades[,k])
-      #   print("Cross-table")
-      #   print(table)
-      rowperc<-prop.table(table,1)
-      
-      colperc<-prop.table(table,2)
-      #  print("Distribucions condicionades a files")
-      # print(rowperc)
-      
-      #ojo porque si la variable es true o false la identifica amb el tipus Logical i
-      #aquest no te levels, por tanto, coertion preventiva
-      
-      dades[,k]<-as.factor(dades[,k])
-      
-      
-      marg <- table(as.factor(P))/n
-      print(append("Categories=",levels(as.factor(dades[,k]))))
-      
-      #from next plots, select one of them according to your practical case
-      plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
-      paleta<-rainbow(length(levels(dades[,k])))
-      for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
-      
-      #with legend
-      plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
-      paleta<-rainbow(length(levels(dades[,k])))
-      for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
-      legend("topright", levels(dades[,k]), col=paleta, lty=2, cex=0.6)
-      
-      #condicionades a classes
-      print(append("Categories=",levels(dades[,k])))
-      plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
-      paleta<-rainbow(length(levels(dades[,k])))
-      for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
-      
-      #with legend
-      plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
-      paleta<-rainbow(length(levels(dades[,k])))
-      for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
-      legend("topright", levels(dades[,k]), col=paleta, lty=2, cex=0.6)
-      
-      #amb variable en eix d'abcisses
-      marg <-table(dades[,k])/n
-      print(append("Categories=",levels(dades[,k])))
-      plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]), las=3)
-      #x<-plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]), xaxt="n")
-      #text(x=x+.25, y=-1, adj=1, levels(CountryName), xpd=TRUE, srt=25, cex=0.7)
-      paleta<-rainbow(length(levels(as.factor(P))))
-      for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c]) }
-      
-      #with legend
-      plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]), las=3)
-      for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c])}
-      legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=0.6)
-      
-      #condicionades a columna 
-      plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]), las=3)
-      paleta<-rainbow(length(levels(as.factor(P))))
-      for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c]) }
-      
-      #with legend
-      plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]), las=3)
-      for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c])}
-      legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=0.6)
-      
-      table<-table(dades[,k],P)
-      print("Cross Table:")
-      print(table)
-      print("Distribucions condicionades a columnes:")
-      print(colperc)
-      
-      #diagrames de barres apilades                                         
-      
-      paleta<-rainbow(length(levels(dades[,k])))
-      barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
-      
-      barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
-      legend("topright",levels(as.factor(dades[,k])),pch=1,cex=0.5, col=paleta)
-      
-      #diagrames de barres adosades
-      barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta )
-      
-      barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta)
-      legend("topright",levels(as.factor(dades[,k])),pch=1,cex=0.5, col=paleta)
-      
-      print("Test Chi quadrat: ")
-      print(chisq.test(dades[,k], as.factor(P)))
-      
-      print("valorsTest:")
-      print( ValorTestXquali(P,dades[,k]))
-      #calcular els pvalues de les quali
-    }
-  }
-}#endfor
+## Look at script -> "script R extra" -> 2_profiling_OK.R
+## Lo ponemos en otro script porque no es necesario que el pipeline ejecute ese código.
 
 
 
-#descriptors de les classes més significatius. Afegir info qualits
-# for (c in 1:length(levels(as.factor(P)))) {
-#   if(!is.na(levels(as.factor(P))[c])){
-#     print(paste("P.values per class:",levels(as.factor(P))[c]));
-#     print(sort(pvalk[c,]), digits=3) 
-#   }
-# }
+######################################################
+############ MODEL DE PREDICCIÓ -> LINEAL ############
+######################################################
 
-#afegir la informacio de les modalitats de les qualitatives a la llista de pvalues i fer ordenacio global
+## Lineal Model by Top 10 - Cluster groups ##
 
-#saving the dataframe in an external file
-#write.table(dd, file = "credscoClean.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
+# Cluster g1 (6)   -> Qatar, Bahrain, Luxembourg, Kuwait, United Arab Emirates,Singapore
+# Cluster g2 (37)  -> San Marino, Andorra, Vatican, Panama, Montenegro, Armenia, Oman, Maldives, Moldova, 
+#                     Costa Rica, Cape Verde, Georgia, Bahamas, Bolivia, Dominican Republic, Ecuador, Belize, Honduras, Morocco,             
+#                     Suriname, Djibouti, Libya, Paraguay, Sao Tome and Principe, Guatemala, Eswatini, Gabon, Namibia, Guyana, 
+#                     Equatorial Guinea, New Zealand, Marshall Islands, Papua New Guinea, Fiji, Solomon Islands, Samoa, Vanuatu
+# Cluster g3 (7)   -> Chile, Israel, Belgium, Czechia, Switzerland, Canada, Australia
+# Cluster g4 (6)   -> Mexico, Spain, Colombia, Peru, South Africa, Argentina
+# Cluster g5 (2)   -> United States, Brazil
 
 
+# Cluster g1
+c_g1 <- top10 %>% 
+  filter(location %in% c("Qatar", "Bahrain", "Luxembourg", "Kuwait", "United Arab Emirates","Singapore"))
+table(c_g1$location)
 
+c_g1_mean <- top10cluster %>% 
+  filter(location %in% c("Qatar", "Bahrain", "Luxembourg", "Kuwait", "United Arab Emirates","Singapore"))
 
-############### MODEL DE PREDICCIÓ -> LINEAL ################
+# Cluster g2
+c_g2 <- top10 %>% 
+  filter(location %in% c("Panama", "Montenegro", "Armenia", "Oman", "Maldives","Morocco", "Moldova", "Costa Rica", "Cape Verde", "Georgia", "Bahamas", "Bolivia", "Dominican Republic", "Ecuador", "Belize", "Honduras", "Suriname", "Djibouti", "Libya", "Paraguay", "Sao Tome and Principe", "Guatemala", "Eswatini", "Gabon", "Namibia", "Guyana",  "Equatorial Guinea", "New Zealand", "Marshall Islands", "Papua New Guinea","Fiji", "Solomon Islands", "Samoa", "Vanuatu"))
+table(c_g2$location)
 
-# Correlació i Linial Model de Predicció
-# top10lm <- lm(top10b$total_cases ~ top10b$total_deaths, top10b)
+c_g2_mean <- top10cluster %>% 
+  filter(location %in% c("Panama", "Montenegro", "Armenia", "Oman", "Maldives","Morocco", "Moldova", "Costa Rica", "Cape Verde", "Georgia", "Bahamas", "Bolivia", "Dominican Republic", "Ecuador", "Belize", "Honduras", "Suriname", "Djibouti", "Libya", "Paraguay", "Sao Tome and Principe", "Guatemala", "Eswatini", "Gabon", "Namibia", "Guyana",  "Equatorial Guinea", "New Zealand", "Marshall Islands", "Papua New Guinea","Fiji", "Solomon Islands", "Samoa", "Vanuatu"))
+
+# Cluster g3
+c_g3 <- top10 %>% 
+  filter(location %in% c("Chile", "Israel", "Belgium", "Czechia", "Switzerland", "Canada","Australia"))
+table(c_g3$location)
+
+c_g3_mean <- top10cluster %>% 
+  filter(location %in% c("Chile", "Israel", "Belgium", "Czechia", "Switzerland", "Canada","Australia"))
+
+# Cluster g4
+c_g4 <- top10 %>% 
+  filter(location %in% c("Peru", "Spain", "Argentina", "Colombia", "South Africa", "Mexico"))
+table(c_g4$location)
+
+c_g4_mean <- top10cluster %>% 
+  filter(location %in% c("Peru", "Spain", "Argentina", "Colombia", "South Africa", "Mexico"))
+
+# Cluster g5
+c_g5 <- top10 %>% 
+  filter(location %in% c("United States", "Brazil"))
+table(c_g5$location)
+
+install.packages("PerformanceAnalytics")
+install.packages("corrplot")
+library(corrplot)
+library(PerformanceAnalytics)
+
+# Cluster g1 - Matrix correlation -> variables temporales
+chart.Correlation(c_g1[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+
+# Cluster g1 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+chart.Correlation(c_g1_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+
+# Cluster g2 - Matrix correlation -> variables temporales
+chart.Correlation(c_g2[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+
+# Cluster g2 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+chart.Correlation(c_g2_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+
+# Cluster g3 - Matrix correlation -> variables temporales
+chart.Correlation(c_g3[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+
+# Cluster g3 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+chart.Correlation(c_g3_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+
+# Cluster g4 - Matrix correlation -> variables temporales
+chart.Correlation(c_g4[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+
+# Cluster g4 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+
+# Cluster g5 - Matrix correlation -> variables temporales
+
+# Cluster g5 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+
+#names(c_g1[,c(5:11,13,14)])
+#names(c_g1)
+
+lm_c_g1 <- lm(top10cluster$total_cases ~ top10cluster$total_deaths, top10cluster)
 # summary(top10lm)
 # plot(top10lm)
 # plot(top10b$total_cases, top10b$total_deaths)
@@ -303,3 +228,4 @@ for(k in 1:K){
 # hist(top10b$total_deaths,breaks=15)
 # cor(dist,speed)
 # cor.test(dist,speed)
+
