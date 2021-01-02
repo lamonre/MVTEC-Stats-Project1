@@ -1,0 +1,51 @@
+"iso_code","location","population","popDensity","medianAge","gdp","govt","corruption","healthSecurity","obesity"
+"AND","Andorra",77265,163.755,NA,NA,"Constitutional monarchy","NI","Least prepared",25.6
+"ARE","United Arab Emirates",9890400,112.442,34,67293.483,"Constitutional monarchy","Less corrupt","More prepared",31.7
+"ARG","Argentina",45195777,16.177,31.9,18933.907,"Presidential republic","Highly corrupt","More prepared",28.3
+"ARM","Armenia",2963234,102.931,35.7,8787.58,"Presidential republic","Highly corrupt","More prepared",20.2
+"AUS","Australia",25499881,3.202,37.9,44648.71,"Constitutional monarchy","Less corrupt","Most prepared",29
+"BEL","Belgium",11589616,375.564,41.8,42658.576,"Constitutional monarchy","Less corrupt","More prepared",22.1
+"BHR","Bahrain",1701583,1935.907,32.4,43290.705,"Constitutional monarchy","Highly corrupt","More prepared",29.8
+"BLZ","Belize",397621,16.426,25,7824.362,"Constitutional monarchy","NI","Least prepared",24.1
+"BOL","Bolivia",11673029,10.202,25.4,6885.829,"Presidential republic","Highly corrupt","More prepared",20.2
+"BRA","Brazil",212559409,25.04,33.5,14103.452,"Presidential republic","Highly corrupt","More prepared",22.1
+"CAN","Canada",37742157,4.037,41.4,44017.591,"Constitutional monarchy","Less corrupt","Most prepared",29.4
+"CHE","Switzerland",8654618,214.243,43.1,57410.166,"Parlamentary republic","Less corrupt","Most prepared",19.5
+"CHL","Chile",19116209,24.282,35.4,22767.037,"Presidential republic","Less corrupt","More prepared",28
+"COL","Colombia",50882884,44.223,32.2,13254.949,"Presidential republic","Highly corrupt","More prepared",22.3
+"CRI","Costa Rica",5094114,96.079,33.6,15524.995,"Presidential republic","Less corrupt","More prepared",25.7
+"DJI","Djibouti",988002,41.285,25.4,2705.406,"Presidential republic","Highly corrupt","Least prepared",13.5
+"DOM","Dominican Republic",10847904,222.873,27.6,14600.861,"Presidential republic","Highly corrupt","More prepared",27.6
+"ECU","Ecuador",17643060,66.939,28.1,10581.936,"Presidential republic","Highly corrupt","More prepared",19.9
+"ESP","Spain",46754783,93.105,45.5,34272.36,"Constitutional monarchy","Less corrupt","More prepared",23.8
+"FJI","Fiji",896444,49.562,28.6,8702.975,"Parlamentary republic","NI","Least prepared",30.2
+"GAB","Gabon",2225728,7.859,23.1,16562.413,"Presidential republic","Highly corrupt","Least prepared",15
+"GNQ","Equatorial Guinea",1402985,45.194,22.4,22604.873,"Presidential republic","Highly corrupt","Least prepared",8
+"GTM","Guatemala",17915567,157.834,22.9,7423.808,"Presidential republic","Highly corrupt","Least prepared",21.2
+"GUY","Guyana",786559,3.952,26.3,7435.047,"Presidential republic","Highly corrupt","Least prepared",20.2
+"HND","Honduras",9904608,82.805,24.9,4541.795,"Presidential republic","Highly corrupt","Least prepared",21.4
+"ISR","Israel",8655541,402.606,30.6,33132.32,"Parlamentary republic","Less corrupt","More prepared",26.1
+"KWT","Kuwait",4270563,232.128,33.7,65530.537,"Constitutional monarchy","Highly corrupt","More prepared",37.9
+"LBY","Libya",6871287,3.623,29,17881.509,"In Transition (provisional government)","Highly corrupt","Least prepared",32.5
+"LUX","Luxembourg",625976,231.447,39.7,94277.965,"Constitutional monarchy","Less corrupt","More prepared",22.6
+"MAR","Morocco",36910558,80.08,29.6,7485.013,"Constitutional monarchy","NI","More prepared",26.1
+"MDA","Moldova",4033963,123.655,37.6,5189.972,"Parlamentary republic","Highly corrupt","More prepared",18.9
+"MDV","Maldives",540542,1454.433,30.6,15183.616,"Presidential republic","Highly corrupt","More prepared",8.6
+"MEX","Mexico",128932753,66.444,29.3,17336.469,"Presidential republic","Highly corrupt","More prepared",28.9
+"MHL","Marshall Islands",59194,295.15,NA,3819.202,"Parlamentary republic","NI","Least prepared",52.9
+"MNE","Montenegro",628062,46.28,39.1,16409.288,"Parlamentary republic","Highly corrupt","More prepared",23.3
+"NAM","Namibia",2540916,3.078,22,9541.808,"Semipresidential republic","Less corrupt","More prepared",17.2
+"NZL","New Zealand",4822233,18.206,37.9,36085.843,"Constitutional monarchy","Less corrupt","More prepared",30.8
+"OMN","Oman",5106622,14.98,30.7,37960.709,"Absolut monarchy","Less corrupt","More prepared",27
+"PAN","Panama",4314768,55.133,29.7,22267.037,"Presidential republic","Highly corrupt","More prepared",22.7
+"PER","Peru",32971846,25.129,29.1,12236.706,"Presidential republic","Highly corrupt","More prepared",19.7
+"PNG","Papua New Guinea",8947027,18.22,22.6,3823.194,"Constitutional monarchy","Highly corrupt","Least prepared",21.3
+"PRY","Paraguay",7132530,17.144,26.5,8827.01,"Presidential republic","Highly corrupt","More prepared",20.3
+"QAT","Qatar",2881060,227.322,31.9,116935.6,"Absolut monarchy","Less corrupt","More prepared",35.1
+"SGP","Singapore",5850343,7915.731,42.4,85535.383,"Parlamentary republic","Less corrupt","More prepared",6.1
+"SLB","Solomon Islands",686878,21.841,20.8,2205.923,"Constitutional monarchy","Highly corrupt","Least prepared",22.5
+"STP","Sao Tome and Principe",219161,212.841,18.7,3052.714,"Semipresidential republic","Highly corrupt","Least prepared",12.4
+"SUR","Suriname",586634,3.612,29.6,13767.119,"Parlamentary republic","Highly corrupt","More prepared",26.4
+"USA","United States",331002647,35.608,38.3,54225.446,"Presidential republic","Less corrupt","Most prepared",36.2
+"VUT","Vanuatu",307150,22.662,23.1,2921.909,"Parlamentary republic","Highly corrupt","Least prepared",25.2
+"ZAF","South Africa",59308690,46.754,27.3,12294.876,"Parlamentary republic","Highly corrupt","More prepared",28.3

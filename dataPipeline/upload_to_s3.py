@@ -3,10 +3,10 @@ import boto3
 from botocore.exceptions import ClientError
 from config import bucket, folder, region
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 #load environment variables
-# load_dotenv()
+load_dotenv()
 
 def upload_to_s3(body, filename):
     boto_kwargs = {
