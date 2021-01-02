@@ -10,7 +10,7 @@
 library(readr);
 library(tidyverse);
 
-data <- read.csv("A-covidDaily.csv")
+data <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/rawdata/A_covidDaily.csv")
 data <- rename(data, code = iso_code)
 
 head(data)   # mostrar 10 1es files cada colm
