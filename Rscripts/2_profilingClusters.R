@@ -15,7 +15,7 @@ library(tidyverse)
 
 #setwd("~/AMAZON") !!!!
 
-top10 <- read.csv("B-top10DataFixCluster.csv")
+top10 <- read.csv("B-top10Data.csv") # S3 
 top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
@@ -145,6 +145,8 @@ names(top10cluster)
 # Cluster g5 (2)   -> United States, Brazil
 
 
+
+
 # Cluster g1
 c_g1 <- top10 %>% 
   filter(location %in% c("Qatar", "Bahrain", "Luxembourg", "Kuwait", "United Arab Emirates","Singapore"))
@@ -218,6 +220,9 @@ chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 #names(c_g1[,c(5:11,13,14)])
 #names(c_g1)
 
+
+
+#top10_daily <- read.csv("B-top10.csv") # AMAZON!!!!
 lm_c_g1 <- lm(top10cluster$total_cases ~ top10cluster$total_deaths, top10cluster)
 # summary(top10lm)
 # plot(top10lm)
@@ -228,4 +233,10 @@ lm_c_g1 <- lm(top10cluster$total_cases ~ top10cluster$total_deaths, top10cluster
 # hist(top10b$total_deaths,breaks=15)
 # cor(dist,speed)
 # cor.test(dist,speed)
+# predict(lm_c_g1);
 
+# write.csv(lm_c_g1, file = "C-top10Cluster1Pred.csv")
+# write.csv(lm_c_g2, file = "C-top10Cluster2Pred.csv")
+# write.csv(lm_c_g3, file = "C-top10Cluster3Pred.csv")
+# write.csv(lm_c_g4, file = "C-top10Cluster4Pred.csv")
+# write.csv(lm_c_g5, file = "C-top10Cluster5Pred.csv")
