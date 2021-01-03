@@ -135,6 +135,7 @@ dataTemp <- read.csv("temperatura.csv")
 dataTemp <- subset(dataTemp, select = -c(X))
 dataTemp <- rename(dataTemp, country = Country)
 
+write.csv(dataTemp, file = "B-top10DataTemperature.csv")
 
 ############################################################
 ############     JOIN COVID + ALL EXTRA DATA   ############
@@ -170,10 +171,6 @@ extra <- extra %>%
                          "Panama", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
                          "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
                          "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
-
-
-
-
 
 # extra + covid data
 dataOk <- left_join(data, extra, by = "code")
