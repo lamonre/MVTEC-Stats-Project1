@@ -15,7 +15,7 @@ library(tidyverse)
 
 #setwd("~/AMAZON") !!!!
 
-top10 <- read.csv("B-top10DataFixCluster.csv")
+top10 <- read.csv("B-top10Data.csv") # S3 
 top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
@@ -25,7 +25,7 @@ top10$date <- as.Date(top10$date, format="%Y-%m-%d")
 #hist(top10$date, breaks=4)
 
 #top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
-top10cluster <- top10 %>%
+top10clusterAll <- top10 %>%
   group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
   summarise(date = first(date),
             m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
@@ -56,51 +56,53 @@ top10cluster <- top10 %>%
 
 
 # Transform na & nan to 0 or "no data"
-top10cluster$obesity[is.na(top10cluster$obesity)] <- 0
-top10cluster$population_density[is.na(top10cluster$population_density)] <- 0
-top10cluster$median_age[is.na(top10cluster$median_age)] <- 0
-top10cluster$gdp_per_capita[is.na(top10cluster$gdp_per_capita)] <- 0
-top10cluster$corruption[is.na(top10cluster$corruption)] <- "no data"
-top10cluster$gov[is.na(top10cluster$gov)] <- "no data"
-top10cluster$healthSecurity[is.na(top10cluster$healthSecurity)] <- "no data"
-top10cluster$reproduction_rate[is.nan(top10cluster$reproduction_rate)] <- 0
-top10cluster$total_deaths[is.nan(top10cluster$total_deaths)] <- 0
-top10cluster$total_deaths_per_million[is.nan(top10cluster$total_deaths_per_million)] <- 0
-top10cluster$hospital_beds_per_thousand[is.nan(top10cluster$hospital_beds_per_thousand)] <- 0
-top10cluster$total_tests_per_thousand[is.nan(top10cluster$total_tests_per_thousand)] <- 0
-top10cluster$total_tests[is.nan(top10cluster$total_tests)] <- 0
-top10cluster$new_deaths[is.nan(top10cluster$new_deaths)] <- 0
-top10cluster$cardiovascular_deaths[is.nan(top10cluster$cardiovascular_deaths)] <- 0
-top10cluster$pulmonary_deaths[is.nan(top10cluster$pulmonary_deaths)] <- 0
-top10cluster$diabetes_deaths[is.nan(top10cluster$diabetes_deaths)] <- 0
-top10cluster$cancer_deaths[is.nan(top10cluster$cancer_deaths)] <- 0
-#top10cluster$temp[is.na(top10cluster$temp)] <- 0
+top10clusterAll$obesity[is.na(top10clusterAll$obesity)] <- 0
+top10clusterAll$population_density[is.na(top10clusterAll$population_density)] <- 0
+top10clusterAll$median_age[is.na(top10clusterAll$median_age)] <- 0
+top10clusterAll$gdp_per_capita[is.na(top10clusterAll$gdp_per_capita)] <- 0
+top10clusterAll$corruption[is.na(top10clusterAll$corruption)] <- "no data"
+top10clusterAll$gov[is.na(top10clusterAll$gov)] <- "no data"
+top10clusterAll$healthSecurity[is.na(top10clusterAll$healthSecurity)] <- "no data"
+top10clusterAll$reproduction_rate[is.nan(top10clusterAll$reproduction_rate)] <- 0
+top10clusterAll$total_deaths[is.nan(top10clusterAll$total_deaths)] <- 0
+top10clusterAll$total_deaths_per_million[is.nan(top10clusterAll$total_deaths_per_million)] <- 0
+top10clusterAll$hospital_beds_per_thousand[is.nan(top10clusterAll$hospital_beds_per_thousand)] <- 0
+top10clusterAll$total_tests_per_thousand[is.nan(top10clusterAll$total_tests_per_thousand)] <- 0
+top10clusterAll$total_tests[is.nan(top10clusterAll$total_tests)] <- 0
+top10clusterAll$new_deaths[is.nan(top10clusterAll$new_deaths)] <- 0
+top10clusterAll$cardiovascular_deaths[is.nan(top10clusterAll$cardiovascular_deaths)] <- 0
+top10clusterAll$pulmonary_deaths[is.nan(top10clusterAll$pulmonary_deaths)] <- 0
+top10clusterAll$diabetes_deaths[is.nan(top10clusterAll$diabetes_deaths)] <- 0
+top10clusterAll$cancer_deaths[is.nan(top10clusterAll$cancer_deaths)] <- 0
+#top10clusterAll$temp[is.na(top10clusterAll$temp)] <- 0
 
 # Comprovem que no hi ha na's
 apply(
   is.na
-  (top10cluster), 2, mean)
+  (top10clusterAll), 2, mean)
   
-str(top10cluster) # x veure tipus dada. x clust: caràcters han ser factors 
-top10cluster$location <- as.factor(top10cluster$location)
-class(top10cluster$location)
-top10cluster$continent <- as.factor(top10cluster$continent)
-class(top10cluster$continent)
-top10cluster$code <- as.factor(top10cluster$code)
-class(top10cluster$code)
-top10cluster$gov <- as.factor(top10cluster$gov)
-class(top10cluster$gov)
-top10cluster$corruption <- as.factor(top10cluster$corruption)
-class(top10cluster$corruption)
-top10cluster$healthSecurity <- as.factor(top10cluster$healthSecurity)
-class(top10cluster$healthSecurity)
+str(top10clusterAll) # x veure tipus dada. x clust: caràcters han ser factors 
+top10clusterAll$location <- as.factor(top10clusterAll$location)
+class(top10clusterAll$location)
+top10clusterAll$continent <- as.factor(top10clusterAll$continent)
+class(top10clusterAll$continent)
+top10clusterAll$code <- as.factor(top10clusterAll$code)
+class(top10clusterAll$code)
+top10clusterAll$gov <- as.factor(top10clusterAll$gov)
+class(top10clusterAll$gov)
+top10clusterAll$corruption <- as.factor(top10clusterAll$corruption)
+class(top10clusterAll$corruption)
+top10clusterAll$healthSecurity <- as.factor(top10clusterAll$healthSecurity)
+class(top10clusterAll$healthSecurity)
 library(lubridate)
-top10cluster$date <- as.Date(top10cluster$date, format="%Y-%m-%d")
-class(top10cluster$date)
+top10clusterAll$date <- as.Date(top10clusterAll$date, format="%Y-%m-%d")
+class(top10clusterAll$date)
 
 ############### CLUSTER ################
 
-top10cluster <-top10cluster[-c(13), ]
+# Quitamos United States y Brazil, pq las analizaremos en un grupo diferente
+# Lo explicamos en el informe
+top10cluster <-top10clusterAll[-c(13), ]
 top10cluster <-top10cluster[-c(15),]
 
 library(cluster)
@@ -134,6 +136,7 @@ names(top10cluster)
 ######################################################
 
 ## Lineal Model by Top 10 - Cluster groups ##
+## We have selected the cluster by countries on date 03-01-2021
 
 # Cluster g1 (6)   -> Qatar, Bahrain, Luxembourg, Kuwait, United Arab Emirates,Singapore
 # Cluster g2 (37)  -> San Marino, Andorra, Vatican, Panama, Montenegro, Armenia, Oman, Maldives, Moldova, 
@@ -143,6 +146,8 @@ names(top10cluster)
 # Cluster g3 (7)   -> Chile, Israel, Belgium, Czechia, Switzerland, Canada, Australia
 # Cluster g4 (6)   -> Mexico, Spain, Colombia, Peru, South Africa, Argentina
 # Cluster g5 (2)   -> United States, Brazil
+
+
 
 
 # Cluster g1
@@ -182,50 +187,91 @@ c_g5 <- top10 %>%
   filter(location %in% c("United States", "Brazil"))
 table(c_g5$location)
 
+c_g5_mean <- top10clusterAll %>% 
+  filter(location %in% c("United States", "Brazil"))
+
 install.packages("PerformanceAnalytics")
 install.packages("corrplot")
 library(corrplot)
 library(PerformanceAnalytics)
 
 # Cluster g1 - Matrix correlation -> variables temporales
-chart.Correlation(c_g1[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g1[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
 
 # Cluster g1 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
-chart.Correlation(c_g1_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g1_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 # Cluster g2 - Matrix correlation -> variables temporales
-chart.Correlation(c_g2[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g2[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
 
 # Cluster g2 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
-chart.Correlation(c_g2_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g2_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 # Cluster g3 - Matrix correlation -> variables temporales
-chart.Correlation(c_g3[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g3[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
 
 # Cluster g3 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
-chart.Correlation(c_g3_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g3_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 # Cluster g4 - Matrix correlation -> variables temporales
-chart.Correlation(c_g4[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g4[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
 
 # Cluster g4 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
 chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 # Cluster g5 - Matrix correlation -> variables temporales
-
+#chart.Correlation(c_g5[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
+                  
 # Cluster g5 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
+# We can't do the correlation because we only have 2 countries
 
-#names(c_g1[,c(5:11,13,14)])
-#names(c_g1)
 
-lm_c_g1 <- lm(top10cluster$total_cases ~ top10cluster$total_deaths, top10cluster)
-# summary(top10lm)
-# plot(top10lm)
-# plot(top10b$total_cases, top10b$total_deaths)
-# boxplot(top10b$total_cases, horizontal=TRUE, main=names(top10b)[6])
-# boxplot(top10b$total_deaths,horizontal=TRUE,main=names(top10b)[9])
-# hist(top10b$total_cases, breaks=15)
-# hist(top10b$total_deaths,breaks=15)
-# cor(dist,speed)
-# cor.test(dist,speed)
+# Cluster g1 - Significancia categóricas
+g1_aov <- aov(m_tcpm ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(total_cases ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(new_cases ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(total_deaths ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(total_deaths_per_million ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(total_tests ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(total_tests_per_thousand ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(population ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(cardiovascular_deaths ~ corruption, data = c_g1_mean) 
+g1_aov <- aov(pulmonary_deaths ~ corruption, data = c_g1_mean)
+g1_aov <- aov(diabetes_deaths ~ corruption, data = c_g1_mean) 
+summary(g1_aov)
 
+g1_aov <- aov(m_tcpm ~ gov, data = c_g1_mean) 
+g1_aov <- aov(total_cases ~ gov, data = c_g1_mean) 
+g1_aov <- aov(new_cases ~ gov, data = c_g1_mean) 
+g1_aov <- aov(total_deaths ~ gov, data = c_g1_mean) 
+g1_aov <- aov(total_deaths_per_million ~ gov, data = c_g1_mean) 
+g1_aov <- aov(total_tests ~ gov, data = c_g1_mean) 
+g1_aov <- aov(total_tests_per_thousand ~ gov, data = c_g1_mean) 
+g1_aov <- aov(population ~ gov, data = c_g1_mean) 
+g1_aov <- aov(cardiovascular_deaths ~ gov, data = c_g1_mean) 
+g1_aov <- aov(pulmonary_deaths ~ gov, data = c_g1_mean)
+g1_aov <- aov(diabetes_deaths ~ gov, data = c_g1_mean) 
+summary(g1_aov)
+
+# Para 'healthSecurity' como solo tiene 1 level, no se pueden aplicar ni Anova, ni Ttest
+# y hemos decidido que sea SIGNIFICATIVA pq todos los valores del cluster tienen el mismo valor
+
+
+lm_c_g1 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths + 
+                total_deaths_per_million + total_tests_per_thousand + total_tests + new_deaths + 
+                population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths, c_g1)
+summary(lm_c_g1)
+
+#install.packages("stargazer")
+#library(stargazer)
+#stargazer(lm_c_g1, type="text", df=FALSE)
+
+# plot(lm_c_g1)
+predict(lm_c_g1)
+
+
+# write.csv(lm_c_g1, file = "C-top10Cluster1Pred.csv")
+# write.csv(lm_c_g2, file = "C-top10Cluster2Pred.csv")
+# write.csv(lm_c_g3, file = "C-top10Cluster3Pred.csv")
+# write.csv(lm_c_g4, file = "C-top10Cluster4Pred.csv")
+# write.csv(lm_c_g5, file = "C-top10Cluster5Pred.csv")
