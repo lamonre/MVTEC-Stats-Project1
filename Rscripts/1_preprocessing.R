@@ -186,3 +186,5 @@ dataOk <- dataOk %>%
                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
 write.csv(dataOk, file = "B-top10Data.csv")
+
+
