@@ -217,7 +217,7 @@ library(PerformanceAnalytics)
 #chart.Correlation(c_g4[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
 
 # Cluster g4 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
-chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
+#chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 # Cluster g5 - Matrix correlation -> variables temporales
 #chart.Correlation(c_g5[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
@@ -227,44 +227,64 @@ chart.Correlation(c_g4_mean[,c(5:23)], histogram = FALSE, method = "pearson")
 
 
 # Cluster g1 - Significancia categóricas
-g1_aov <- aov(m_tcpm ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(total_cases ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(new_cases ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(total_deaths ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(total_deaths_per_million ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(total_tests ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(total_tests_per_thousand ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(population ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(cardiovascular_deaths ~ corruption, data = c_g1_mean) 
-g1_aov <- aov(pulmonary_deaths ~ corruption, data = c_g1_mean)
-g1_aov <- aov(diabetes_deaths ~ corruption, data = c_g1_mean) 
-summary(g1_aov)
+# g1_aov <- aov(m_tcpm ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(total_cases ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(new_cases ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(total_deaths ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(total_deaths_per_million ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(total_tests ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(total_tests_per_thousand ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(population ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(cardiovascular_deaths ~ corruption, data = c_g1_mean) 
+# g1_aov <- aov(pulmonary_deaths ~ corruption, data = c_g1_mean)
+# g1_aov <- aov(diabetes_deaths ~ corruption, data = c_g1_mean) 
+# summary(g1_aov)
 
-g1_aov <- aov(m_tcpm ~ gov, data = c_g1_mean) 
-g1_aov <- aov(total_cases ~ gov, data = c_g1_mean) 
-g1_aov <- aov(new_cases ~ gov, data = c_g1_mean) 
-g1_aov <- aov(total_deaths ~ gov, data = c_g1_mean) 
-g1_aov <- aov(total_deaths_per_million ~ gov, data = c_g1_mean) 
-g1_aov <- aov(total_tests ~ gov, data = c_g1_mean) 
-g1_aov <- aov(total_tests_per_thousand ~ gov, data = c_g1_mean) 
-g1_aov <- aov(population ~ gov, data = c_g1_mean) 
-g1_aov <- aov(cardiovascular_deaths ~ gov, data = c_g1_mean) 
-g1_aov <- aov(pulmonary_deaths ~ gov, data = c_g1_mean)
-g1_aov <- aov(diabetes_deaths ~ gov, data = c_g1_mean) 
-summary(g1_aov)
+# g1_aov <- aov(m_tcpm ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(total_cases ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(new_cases ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(total_deaths ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(total_deaths_per_million ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(total_tests ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(total_tests_per_thousand ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(population ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(cardiovascular_deaths ~ gov, data = c_g1_mean) 
+# g1_aov <- aov(pulmonary_deaths ~ gov, data = c_g1_mean)
+# g1_aov <- aov(diabetes_deaths ~ gov, data = c_g1_mean) 
+# summary(g1_aov)
 
 # Para 'healthSecurity' como solo tiene 1 level, no se pueden aplicar ni Anova, ni Ttest
 # y hemos decidido que sea SIGNIFICATIVA pq todos los valores del cluster tienen el mismo valor
 
 
+#########  CLUSTER 1 - LINIAL MODEL  ############
+
 lm_c_g1 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths + 
                 total_deaths_per_million + total_tests_per_thousand + total_tests + new_deaths + 
-                population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths, c_g1)
+                population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths + date, c_g1)
 summary(lm_c_g1)
 
-#install.packages("stargazer")
-#library(stargazer)
-#stargazer(lm_c_g1, type="text", df=FALSE)
+#########  CLUSTER 1 - new dataframe for PREDICTION  ############
+
+# groupby...
+
+ 
+
+g1_pred_subset <- subset(c_g1, date == "2021-01-02")
+g1_mean_tc <- mean(g1_pred_subset$total_cases)
+g1_mean_tc
+
+
+# mean_tc_c1 
+g1_df_pred <- data.frame(date=c(today()),
+                         total_cases=c(g1_mean_tc),
+                         total_cases_per_million=c(mean_tcpm_g1),
+                         total_deaths=c(mean_td_g1),
+                         total_deaths_per_million=c(mean_tdpm_c1),
+                         total_tests_per_thousand=c(mean_ttpt_c1),
+                         total_tests=c(mean_tt_c1))
+
+today()
 
 # plot(lm_c_g1)
 predict(lm_c_g1)

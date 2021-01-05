@@ -13,6 +13,7 @@ library(readr);
 library(tidyverse);
 
 #data <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/rawdata/A_covidDaily.csv")
+# Add a try catch
 data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv")
 data <- rename(data, code = iso_code)
 
