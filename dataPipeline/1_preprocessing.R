@@ -7,13 +7,9 @@
 ############ READING DATA FROM EXCEL/CSV COVID ############
 ############################################################
 
-install.packages("readr") 
-install.packages("tidyverse")
 library(readr);
 library(tidyverse);
 
-#data <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/rawdata/A_covidDaily.csv")
-# Add a try catch
 data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv")
 data <- rename(data, code = iso_code)
 
@@ -31,7 +27,7 @@ class(data)
 #View(data)
 
 #open access by name to columns
-#attach(data)
+attach(data)
 #?attach
 
 #are all columns of expected types?
@@ -136,7 +132,7 @@ dataTemp <- read.csv("temperatura.csv")
 dataTemp <- subset(dataTemp, select = -c(X))
 dataTemp <- rename(dataTemp, country = Country)
 
-write.csv(dataTemp, file = "B-top10DataTemperature.csv")
+
 
 ############################################################
 ############     JOIN COVID + ALL EXTRA DATA   ############
@@ -160,9 +156,8 @@ pp <- rename(pp, country = COUNTRY, gov = Government_Type, corruption = Corrupti
 obExtra <- left_join(ob, pp, by = "country")
 head(obExtra)
 extra <- left_join(top10Deaths, dataSecurity, by = "country")
-#extra <- left_join(extra, dataTemp, by = "country")
+extra <- left_join(extra, dataTemp, by = "country")
 extra <- left_join(obExtra, extra, by = "country")
-
 
 # top 10 countries extra
 extra <- extra %>% 
@@ -172,6 +167,10 @@ extra <- extra %>%
                          "Panama", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala",
                          "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
                          "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
+
+
+
+
 
 # extra + covid data
 dataOk <- left_join(data, extra, by = "code")
@@ -187,5 +186,3 @@ dataOk <- dataOk %>%
                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
 write.csv(dataOk, file = "B-top10Data.csv")
-
-

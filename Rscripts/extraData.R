@@ -14,7 +14,20 @@ obesitat <- read.csv("obesitat.csv")
 mortality <- read.csv("mortality_causes.csv")
 
 #Set countries to filter to from pre-analysis here
-countries = c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia", "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland", "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudia Arabia", "United Arab Emirates", "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala", "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana", "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu")
+countries = c("Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Eswatini", "Equatorial Guinea", "Morocco", "Namibia", "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czechia", "Moldova", "Switzerland", "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudi Arabia", "United Arab Emirates", "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala", "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana", "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu")
+
+## Renaming some problematic countries
+#extra
+extra[extra == "Cabo Verde"] <- "Cape Verde"
+extra[extra == "Czech Republic"] <- "Czechia"
+extra[extra == "Bahamas, The"] <- "Bahamas"
+
+#obesity
+obesitat[obesitat == "Swaziland"] <- "Eswatini"
+obesitat[obesitat == "Czech Republic"] <- "Czechia"
+
+obesitatFiltered = obesitat %>%
+    filter(Entity %in% countries, Year == "2016")
 
 ## Subset owid, extra data, obesitat, mortality, temperature to just the selected countries and columns
 owidSelect <- owid %>%
@@ -30,8 +43,7 @@ extraSelect <- extra %>%
         subset(select = c(COUNTRY, Government_Type, Corruption_preception)) %>%
         rename(location = COUNTRY, govt = Government_Type, corruption = Corruption_preception)
 
-obesitatSelect <- obesitat %>%
-      filter(Entity %in% countries, Year == "2016") %>%
+obesitatSelect <- obesitatFiltered %>%
       subset(select = c(Code, Prevalence.of.obesity..both.sexes....WHO..2019.)) %>%
       rename(iso_code = Code, obesity = Prevalence.of.obesity..both.sexes....WHO..2019.)
     
@@ -46,4 +58,9 @@ extra_data <- owidSelect %>%
 write.csv(extra_data, file="extra_data.csv",
           row.names=FALSE)
 
+
+#Checking all countries are found
+countries %in% owidSelect$location
+countries %in% extraSelect$location
+countries %in% obesitatFiltered$Entity
 
