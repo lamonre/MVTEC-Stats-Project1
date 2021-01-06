@@ -5,8 +5,8 @@ from config import bucket, folder, region
 import os
 
 ### Uncomment 2 lines below to load creds if uploading locally ###
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 def upload_to_s3(body, filename):
     boto_kwargs = {

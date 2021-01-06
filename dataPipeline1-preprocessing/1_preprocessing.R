@@ -60,7 +60,7 @@ apply(is.na(data), 2, sum) # 2 = columnes
 ############        READING DATA OBESITY        ############
 ############################################################
 
-ob <- read.csv("obesitat.csv") 
+ob <- read.csv("rawdata/obesitat.csv") 
 sapply(ob, class)
 
 # renaming columns
@@ -82,7 +82,7 @@ ob <- subset(ob, select = -c(year))
 ############################################################
 
 
-dataDeaths <- read.csv("mortality_causes.csv") 
+dataDeaths <- read.csv("rawdata/mortality_causes.csv") 
 #head(dataDeaths)
 #View(dataDeaths)
 
@@ -124,14 +124,14 @@ top10Deaths <- rename(top10Deaths, country = location)
 ############      READING DATA REBECCA          ############
 ############################################################
 
-dataSecurity <- read.csv("healthSecurity.csv") 
+dataSecurity <- read.csv("rawdata/healthSecurity.csv") 
 head(dataSecurity)
 
 ############################################################
 ############   READING DATA TEMPERATURE        ############
 ############################################################
 
-dataTemp <- read.csv("temperatura.csv") 
+dataTemp <- read.csv("rawdata/temperatura.csv") 
 dataTemp <- subset(dataTemp, select = -c(X))
 dataTemp <- rename(dataTemp, country = Country)
 
@@ -143,7 +143,7 @@ write.csv(dataTemp, file = "B-top10DataTemperature.csv")
 
 # info countries extra - Karina#
 library(readxl)    # x poder llegir arxiu, q és xlsx
-pp <- read_excel("country-info.xlsx")
+pp <- read_excel("rawdata/country-info.xlsx")
 
 head(pp)
 sapply(pp, class)
@@ -186,5 +186,3 @@ dataOk <- dataOk %>%
                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
 write.csv(dataOk, file = "B-top10Data.csv")
-
-

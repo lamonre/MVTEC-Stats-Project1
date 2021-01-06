@@ -7,16 +7,16 @@
 ############ READING DATA FROM EXCEL/CSV COVID + EXTRA ############
 ###################################################################
 
-install.packages("readr") 
-install.packages("tidyverse")
+#install.packages("readr") 
+#install.packages("tidyverse")
 library(readr)
 library(tidyverse)
 
 
 #setwd("~/AMAZON") !!!!
 
-top10 <- read.csv("B-top10Data.csv") # S3 
-top10 <- subset(top10, select = -c(X))
+top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/B_top10data.csv") # S3 
+#top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
 
@@ -190,8 +190,8 @@ table(c_g5$location)
 c_g5_mean <- top10clusterAll %>% 
   filter(location %in% c("United States", "Brazil"))
 
-install.packages("PerformanceAnalytics")
-install.packages("corrplot")
+#install.packages("PerformanceAnalytics")
+#install.packages("corrplot")
 library(corrplot)
 library(PerformanceAnalytics)
 
@@ -270,8 +270,10 @@ summary(lm_c_g1)
 predict(lm_c_g1)
 
 
-# write.csv(lm_c_g1, file = "C-top10Cluster1Pred.csv")
-# write.csv(lm_c_g2, file = "C-top10Cluster2Pred.csv")
-# write.csv(lm_c_g3, file = "C-top10Cluster3Pred.csv")
-# write.csv(lm_c_g4, file = "C-top10Cluster4Pred.csv")
-# write.csv(lm_c_g5, file = "C-top10Cluster5Pred.csv")
+write.csv(lm_c_g1, file = "C-top10Cluster1Pred.csv")
+write.csv(lm_c_g2, file = "C-top10Cluster2Pred.csv")
+write.csv(lm_c_g3, file = "C-top10Cluster3Pred.csv")
+write.csv(lm_c_g4, file = "C-top10Cluster4Pred.csv")
+write.csv(lm_c_g5, file = "C-top10Cluster5Pred.csv")
+
+

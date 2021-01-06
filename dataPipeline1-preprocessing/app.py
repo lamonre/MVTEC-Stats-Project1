@@ -1,5 +1,4 @@
 import pandas as pd
-# from dotenv import load_dotenv
 import os
 from email_cred import send_mail
 from upload_to_s3 import upload_to_s3
@@ -9,8 +8,8 @@ from botocore.exceptions import ClientError
 from config import bucket, folder, region
 import subprocess
 
-
-#load local environment variables
+### Uncomment 3 lines below to load creds if uploading locally ###
+# from dotenv import load_dotenv
 # load_dotenv()
 # IS_DEV = os.getenv('IS_DEV')
 
@@ -21,14 +20,8 @@ preprocess = "B-top10Data.csv"
 #Start upload to S3 Heroku console
 logging.info("Starting....")
 
-# columns = ['iso_code', 'continent', 'location', 'date', 'total_cases', 'total_cases_per_million', 'new_cases_smoothed', 'total_deaths', 'total_deaths_per_million', 'new_deaths_smoothed']
-# countries = ["Cape Verde", "South Africa", "Djibouti", "Sao Tome and Principe", "Libya", "Gabon", "Swaziland", "Equatorial Guinea", "Morocco", "Namibia", "Andorra", "San Marino", "Vatican", "Luxembourg", "Montenegro", "Belgium", "Spain", "Czech Republic", "Moldova", "Switzerland", "Qatar", "Bahrain", "Kuwait", "Armenia", "Israel", "Oman", "Maldives", "Singapore", "Saudia Arabia", "United Arab Emirates", "Panama", "United States", "Costa Rica", "Dominican Republic", "Bahamas", "Honduras", "Mexico", "Belize", "Canada", "Guatemala", "Chile", "Peru", "Brazil", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana", "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu"]
-
 try:
     df = pd.read_csv(preprocess)
-    #df = c[c['location'].isin(countries)]
-    # df['year'] = df['date'].dt.year
-    # df['week'] = df['date'].dt.week
     df2csv = df.to_csv(index=False)
     logging.info("starting upload")
     upload_to_s3(body=df2csv, filename='B_top10data.csv')
