@@ -97,7 +97,11 @@ library(lubridate)
 top10clusterAll$date <- as.Date(top10clusterAll$date, format="%Y-%m-%d")
 class(top10clusterAll$date)
 
-############### CLUSTER ################
+
+
+###################################################################
+############        GENERAMOS LOS CLUSTERS            ############
+###################################################################
 
 # Quitamos United States y Brazil, pq las analizaremos en un grupo diferente
 # Lo explicamos en el informe
@@ -124,11 +128,13 @@ top10cluster <- rename(top10cluster, cluster = "...27")
 names(top10cluster)
 
 
-############### PROFILING + KRUSKAL MODEL ################
-## Look at script -> "script R extra" -> 2_profiling_OK.R
+
+###################################################################
+############        PROFILING + KRUSKAL MODEL          ############
+###################################################################
+
+## Look at script -> "script R extra" -> "2_profiling_OK.R"
 ## Lo ponemos en otro script porque no es necesario que el pipeline ejecute ese código.
-
-
 
 
 
@@ -189,6 +195,15 @@ table(c_g5$location)
 
 c_g5_mean <- top10clusterAll %>% 
   filter(location %in% c("United States", "Brazil"))
+
+
+
+
+################################################################
+############    MATRIX CORRELATION CLUSTER GROUPS   ############
+################################################################
+
+# We will see here what are more significant correlation variables, for each group cluster
 
 #install.packages("PerformanceAnalytics")
 #install.packages("corrplot")
@@ -453,7 +468,7 @@ write.csv(g3_pred_df_final, file = "C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
 lm_c_g4 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths +
                 total_deaths_per_million + new_deaths +
                 population + median_age + gdp_per_capita + cardiovascular_deaths + diabetes_deaths + date, c_g4)
-summary(lm_c_g4)
+#summary(lm_c_g4)
 
 # Cogemos los datos del cluster g4, para la fecha más actual del dataframe
 # Duda: ¿Está bien coger sólo 1 día o tendríamos que haber cogido más para hacer la predicción?
