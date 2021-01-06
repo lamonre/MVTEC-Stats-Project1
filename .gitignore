@@ -1,2 +1,6 @@
 .vscode/launch.json
 .env
+.DS_store
+.RData
+.Rhistory
+.gitignore

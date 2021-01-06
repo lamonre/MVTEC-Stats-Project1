@@ -3,9 +3,9 @@ import boto3
 from botocore.exceptions import ClientError
 from config import bucket, folder, region
 import os
-# from dotenv import load_dotenv
 
-#load environment variables
+### Uncomment 2 lines below to load creds if uploading locally ###
+# from dotenv import load_dotenv
 # load_dotenv()
 
 def upload_to_s3(body, filename):

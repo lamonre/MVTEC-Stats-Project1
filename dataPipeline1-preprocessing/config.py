@@ -1,4 +1,4 @@
-folder="rawdata"
+folder="finaldata"
 
 bucket="mvtec-group2"
 region="eu-west-1"
