@@ -266,7 +266,7 @@ c_g5_mean <- top10clusterAll %>%
 ############   CLUSTER 1 - LINIAL MODEL PREDICTION   ############
 #################################################################
 
-# Seleccionamos las categóricas que nos dieron resultados más significativos 
+# Seleccionamos las variables cuantitativas que nos dieron resultados más significativos 
 lm_c_g1 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths + 
                 total_deaths_per_million + total_tests_per_thousand + total_tests + new_deaths + 
                 population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths + date, c_g1)
