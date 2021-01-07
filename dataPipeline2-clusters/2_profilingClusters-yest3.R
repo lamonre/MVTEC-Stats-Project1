@@ -14,7 +14,7 @@ library(tidyverse)
 
 
 #setwd("~/AMAZON") !!!! Rebecca
-top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/B_top10data.csv") # S3 !!!! Rebecca
+top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/preprocess/B_top10data_yest3.csv") # S3 !!!! Rebecca
 #top10 <- subset(top10, select = -c(0)) !!!! Don't need anymore, remove row.names from outputted CSV.
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
@@ -290,7 +290,7 @@ g1_mean_cd <- mean(g1_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g1_mean_pd <- mean(g1_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g1_mean_dd <- mean(g1_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today <- Sys.Date()-1
+today <- Sys.Date()-3
 
 # mean_tc_c1 
 g1_df_pred <- data.frame(date=c(today),
@@ -313,16 +313,16 @@ g1_pred_new_cases <- predict(object=lm_c_g1, newdata=g1_df_pred)
 # creamos df con la prediccion y fecha actual
 g1_pred_df_result <- data.frame(date=g1_df_pred$date,g1_pred_new_cases)
 
-# Leemos las predicciones anteriores...
-g1_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
-g1_pred_df_final$date <- as.Date(g1_pred_df_final$date, format="%Y-%m-%d")
-g1_pred_df_final <- subset(g1_pred_df_final, select = -c(0))
+# # Leemos las predicciones anteriores...
+# g1_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
+# g1_pred_df_final$date <- as.Date(g1_pred_df_final$date, format="%Y-%m-%d")
+# # g1_pred_df_final <- subset(g1_pred_df_final, select = -c(0))
 
-# creamos un df con las predicciones anteriores + actual
-g1_pred_df_final <- rbind(g1_pred_df_final,g1_pred_df_result)
+# # creamos un df con las predicciones anteriores + actual
+# g1_pred_df_final <- rbind(g1_pred_df_final,g1_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g1_pred_df_final, file = "C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
+write.csv(g1_pred_df_result, file = "C-top10Cluster1Pred-yest3.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 
@@ -353,7 +353,7 @@ g2_mean_dd <- mean(g2_pred_subset$diabetes_deaths, na.rm = TRUE, nan.rm = TRUE)
 g2_mean_cad <- mean(g2_pred_subset$cancer_deaths, na.rm = TRUE, nan.rm = TRUE)
 
 
-today2 <- Sys.Date()-1
+today2 <- Sys.Date()-3
 
 # mean_tc_g2 
 g2_df_pred <- data.frame(date=c(today2),
@@ -385,17 +385,17 @@ g2_pred_new_cases <- predict(object=lm_c_g2, newdata=g2_df_pred)
 # creamos df con la prediccion y fecha actual
 g2_pred_df_result <- data.frame(date=g2_df_pred$date,g2_pred_new_cases)
 
-# Leemos las predicciones anteriores...
-g2_pred_df_yest <- read.csv("https://raw.githubusercontent.com/arixha/MVTEC-Stats-Project1/main/Rscripts/C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
-g2_pred_df_yest$date <- as.Date(g2_pred_df_yest$date, format="%Y-%m-%d")
-g2_pred_df_yest <- subset(g2_pred_df_yest, select = -c(X))
+# # Leemos las predicciones anteriores...
+# g2_pred_df_yest <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
+# g2_pred_df_yest$date <- as.Date(g2_pred_df_yest$date, format="%Y-%m-%d")
+# #g2_pred_df_yest <- subset(g2_pred_df_yest, select = -c(X))
 
-# creamos un df con las predicciones anteriores + actual
-g2_pred_df_final <- rbind(g2_pred_df_yest,g2_pred_df_result)
+# # creamos un df con las predicciones anteriores + actual
+# g2_pred_df_final <- rbind(g2_pred_df_yest,g2_pred_df_result)
 
 
 # Export predictions for each cluster
-write.csv(g2_pred_df_final, file = "C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
+write.csv(g2_pred_df_result, file = "C-top10Cluster2Pred-yest3.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 #################################################################
@@ -425,7 +425,7 @@ g3_mean_cd <- mean(g3_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g3_mean_pd <- mean(g3_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g3_mean_cad <- mean(g3_pred_subset$cancer_deaths, na.rm = TRUE)
 
-today3 <- Sys.Date()-1
+today3 <- Sys.Date()-3
 
 # mean_tc_g3
 g3_df_pred <- data.frame(date=c(today3),
@@ -448,16 +448,16 @@ g3_pred_new_cases <- predict(object=lm_c_g3, newdata=g3_df_pred)
 # creamos df con la prediccion y fecha actual
 g3_pred_df_result <- data.frame(date=g3_df_pred$date,g3_pred_new_cases)
 
-# Leemos las predicciones anteriores...
-g3_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
-g3_pred_df_final$date <- as.Date(g3_pred_df_final$date, format="%Y-%m-%d")
-g3_pred_df_final <- subset(g3_pred_df_final, select = -c(0))
+# # Leemos las predicciones anteriores...
+# g3_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
+# g3_pred_df_final$date <- as.Date(g3_pred_df_final$date, format="%Y-%m-%d")
+# # g3_pred_df_final <- subset(g3_pred_df_final, select = -c(0))
 
-# creamos un df con las predicciones anteriores + actual
-g3_pred_df_final <- rbind(g3_pred_df_final,g3_pred_df_result)
+# # creamos un df con las predicciones anteriores + actual
+# g3_pred_df_final <- rbind(g3_pred_df_final,g3_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g3_pred_df_final, file = "C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
+write.csv(g3_pred_df_result, file = "C-top10Cluster3Pred-yest3.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 
@@ -489,7 +489,7 @@ g4_mean_gdp <- mean(g4_pred_subset$gdp_per_capita, na.rm = TRUE)
 g4_mean_cd <- mean(g4_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g4_mean_dd <- mean(g4_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today4 <- Sys.Date()-1
+today4 <- Sys.Date()-3
 
 g4_df_pred <- data.frame(date=c(today4),
                          total_cases=c(g4_mean_tc),
@@ -510,16 +510,16 @@ g4_pred_new_cases <- predict(object=lm_c_g4, newdata=g4_df_pred)
 # creamos df con la prediccion y fecha actual
 g4_pred_df_result <- data.frame(date=g4_df_pred$date,g4_pred_new_cases)
 
-# Leemos las predicciones anteriores...
-g4_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster4Pred.csv")   # S3 !!!! Rebecca
-g4_pred_df_final$date <- as.Date(g4_pred_df_final$date, format="%Y-%m-%d")
-g4_pred_df_final <- subset(g4_pred_df_final, select = -c(0))
+# # Leemos las predicciones anteriores...
+# g4_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster4Pred.csv")   # S3 !!!! Rebecca
+# g4_pred_df_final$date <- as.Date(g4_pred_df_final$date, format="%Y-%m-%d")
+# # g4_pred_df_final <- subset(g4_pred_df_final, select = -c(0))
 
-# creamos un df con las predicciones anteriores + actual
-g4_pred_df_final <- rbind(g4_pred_df_final,g4_pred_df_result)
+# # creamos un df con las predicciones anteriores + actual
+# g4_pred_df_final <- rbind(g4_pred_df_final,g4_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g4_pred_df_final, file = "C-top10Cluster4Pred.csv")  # S3 !!!! Rebecca
+write.csv(g4_pred_df_result, file = "C-top10Cluster4Pred-yest3.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 #################################################################
@@ -549,7 +549,7 @@ g5_mean_cd <- mean(g5_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g5_mean_pd <- mean(g5_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g5_mean_dd <- mean(g5_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today5 <- Sys.Date()-1
+today5 <- Sys.Date()-3
 
 g5_df_pred <- data.frame(date=c(today5),
                          total_cases=c(g5_mean_tc),
@@ -569,13 +569,13 @@ g5_pred_new_cases <- predict(object=lm_c_g5, newdata=g5_df_pred)
 # creamos df con la prediccion y fecha actual
 g5_pred_df_result <- data.frame(date=g5_df_pred$date,g5_pred_new_cases)
 
-# Leemos las predicciones anteriores...
-g5_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
-g5_pred_df_final$date <- as.Date(g5_pred_df_final$date, format="%Y-%m-%d")
-g5_pred_df_final <- subset(g5_pred_df_final, select = -c(0))
+# # Leemos las predicciones anteriores...
+# g5_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
+# g5_pred_df_final$date <- as.Date(g5_pred_df_final$date, format="%Y-%m-%d")
+# # g5_pred_df_final <- subset(g5_pred_df_final, select = -c(0))
 
-# creamos un df con las predicciones anteriores + actual
-g5_pred_df_final <- rbind(g5_pred_df_final,g5_pred_df_result)
+# # creamos un df con las predicciones anteriores + actual
+# g5_pred_df_final <- rbind(g5_pred_df_final,g5_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g5_pred_df_final, file = "C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
+write.csv(g5_pred_df_result, file = "C-top10Cluster5Pred-yest3.csv", row.names = FALSE)  # S3 !!!! Rebecca
