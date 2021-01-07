@@ -7,15 +7,15 @@
 ############ READING DATA FROM EXCEL/CSV COVID + EXTRA ############
 ###################################################################
 
-install.packages("readr") 
-install.packages("tidyverse")
+#install.packages("readr") 
+#install.packages("tidyverse")
 library(readr)
 library(tidyverse)
 
 
 #setwd("~/AMAZON") !!!! Rebecca
-top10 <- read.csv("B-top10Data.csv") # S3 !!!! Rebecca
-top10 <- subset(top10, select = -c(X))
+top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/B_top10data.csv") # S3 !!!! Rebecca
+#top10 <- subset(top10, select = -c(X))
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
 
@@ -290,7 +290,7 @@ g1_mean_cd <- mean(g1_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g1_mean_pd <- mean(g1_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g1_mean_dd <- mean(g1_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today <- max(c_g1$date)
+today <- Sys.Date()-1
 
 # mean_tc_c1 
 g1_df_pred <- data.frame(date=c(today),
@@ -353,7 +353,7 @@ g2_mean_dd <- mean(g2_pred_subset$diabetes_deaths, na.rm = TRUE, nan.rm = TRUE)
 g2_mean_cad <- mean(g2_pred_subset$cancer_deaths, na.rm = TRUE, nan.rm = TRUE)
 
 
-today2 <- max(c_g2$date)
+today2 <- Sys.Date()-1
 
 # mean_tc_g2 
 g2_df_pred <- data.frame(date=c(today2),
@@ -425,7 +425,7 @@ g3_mean_cd <- mean(g3_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g3_mean_pd <- mean(g3_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g3_mean_cad <- mean(g3_pred_subset$cancer_deaths, na.rm = TRUE)
 
-today3 <- max(c_g3$date)
+today3 <- Sys.Date()-1
 
 # mean_tc_g3
 g3_df_pred <- data.frame(date=c(today3),
@@ -489,7 +489,7 @@ g4_mean_gdp <- mean(g4_pred_subset$gdp_per_capita, na.rm = TRUE)
 g4_mean_cd <- mean(g4_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g4_mean_dd <- mean(g4_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today4 <- max(c_g4$date)
+today4 <- Sys.Date()-1
 
 g4_df_pred <- data.frame(date=c(today4),
                          total_cases=c(g4_mean_tc),
@@ -549,7 +549,7 @@ g5_mean_cd <- mean(g5_pred_subset$cardiovascular_deaths, na.rm = TRUE)
 g5_mean_pd <- mean(g5_pred_subset$pulmonary_deaths, na.rm = TRUE)
 g5_mean_dd <- mean(g5_pred_subset$diabetes_deaths, na.rm = TRUE)
 
-today5 <- max(c_g5$date)
+today5 <- Sys.Date()-1
 
 g5_df_pred <- data.frame(date=c(today5),
                          total_cases=c(g5_mean_tc),
