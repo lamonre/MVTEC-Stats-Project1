@@ -8,7 +8,11 @@
 ###################################################################
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #install.packages("readr") 
+=======
+#install.packages("readr")
+>>>>>>> Stashed changes
 =======
 #install.packages("readr")
 >>>>>>> Stashed changes
@@ -20,7 +24,11 @@ library(tidyverse)
 #setwd("~/AMAZON") !!!! Rebecca
 top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/B_top10data.csv") # S3 !!!! Rebecca
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #top10 <- subset(top10, select = -c(X))
+=======
+#top10 <- subset(top10, select = -c(0)) !!!! Don't need anymore, remove row.names from outputted CSV.
+>>>>>>> Stashed changes
 =======
 #top10 <- subset(top10, select = -c(0)) !!!! Don't need anymore, remove row.names from outputted CSV.
 >>>>>>> Stashed changes
