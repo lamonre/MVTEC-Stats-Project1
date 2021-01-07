@@ -28,9 +28,13 @@ Date Pipeline 2: Please refer to this repository: [https://github.com/arixha/MVT
 During the prediction stage, we were able to use the model to cluster groups together in the following ways:
 
 **Cluster 1** Qatar, Bahrain, Luxembourg, Kuwait, United Arab Emirates, Singapore.
+
 **Cluster 2** San Marino, Andorra, Vatican, Panama, Montenegro, Armenia, Oman, Maldives, Moldova, Costa Rica, Cape Verde, Georgia, Bahamas, Bolivia, Dominican Republic, Ecuador, Belize, Honduras, Morocco, Suriname, Djibouti, Libya, Paraguay, Sao Tome and Principe, Guatemala, Eswatini, Gabon, Namibia, Guyana, Equatorial Guinea, New Zealand, Marshall Islands, Papua New Guinea, Fiji, Solomon Islands, Samoa, Vanuatu.
+
 **Cluster 3** Chile, Israel, Belgium, Czechia, Switzerland, Canada, Australia.
+
 **Cluster 4** Mexico, Spain, Colombia, Peru, South Africa, Argentina.
+
 **Cluster 5** United States, Brazil. *They were too large for the data predictions and needed to be considered separately.*
 
 ## Data focus: Which countries we selected and why.
