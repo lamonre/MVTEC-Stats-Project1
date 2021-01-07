@@ -13,14 +13,14 @@ In order to keep the predictions as clean as possible, we ended up using Python 
 
 We then, pushed these files up to S3 and used them for the second data pipeline.
 
-![Data pipeline 1 Diagram](https://github.com/arixha/MVTEC-Stats-Project1/blob/main/dataPipeline2-clusters.jpg?raw=true)
+![Data pipeline 1 Diagram](https://github.com/arixha/MVTEC-Stats-Project1/blob/main/dataPipeline1-preprocessing.jpg?raw=true)
 
 Date Pipeline 1: Please refer to this repository: [https://github.com/arixha/MVTEC-Stats-Project1/tree/main/dataPipeline1-preprocessing](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/dataPipeline1-preprocessing)
 
 ###  Data Pipline 2: Five cluster predictions
 The second data pipeline has three Rscripts. Two of them just run predictions on the previous two days and the last one will run the latest prediction and then add in the two previous days predictions to output the "joined" csv files for each cluster. These are then used for the data visualisations.
 
-![Data pipeline 2 Diagram](https://github.com/arixha/MVTEC-Stats-Project1/blob/main/dataPipeline1-preprocessing.jpg?raw=true)
+![Data pipeline 2 Diagram](https://github.com/arixha/MVTEC-Stats-Project1/blob/main/dataPipeline2-clusters.jpg?raw=true)
 
 Date Pipeline 2: Please refer to this repository: [https://github.com/arixha/MVTEC-Stats-Project1/tree/main/dataPipeline2-clusters](https://github.com/arixha/MVTEC-Stats-Project1/tree/main/dataPipeline2-clusters)
 
