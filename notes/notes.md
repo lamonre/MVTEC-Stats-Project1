@@ -1,5 +1,9 @@
 # MVTEC-Stats-Project1
 ---
+*Thurs Dec 17*
+## Task List:
+Pre-processing Project Board [here](https://github.com/arixha/MVTEC-Stats-Project1/projects/1)
+
 *Wed Dec 16*
 ## Questions to Matt:
 - Show diagram and make sure we are going in the right direction. Maybe some tips to simplify the workflow.
