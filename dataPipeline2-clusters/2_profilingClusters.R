@@ -7,7 +7,11 @@
 ############ READING DATA FROM EXCEL/CSV COVID + EXTRA ############
 ###################################################################
 
+<<<<<<< Updated upstream
 #install.packages("readr") 
+=======
+#install.packages("readr")
+>>>>>>> Stashed changes
 #install.packages("tidyverse")
 library(readr)
 library(tidyverse)
@@ -15,7 +19,11 @@ library(tidyverse)
 
 #setwd("~/AMAZON") !!!! Rebecca
 top10 <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/B_top10data.csv") # S3 !!!! Rebecca
+<<<<<<< Updated upstream
 #top10 <- subset(top10, select = -c(X))
+=======
+#top10 <- subset(top10, select = -c(0)) !!!! Don't need anymore, remove row.names from outputted CSV.
+>>>>>>> Stashed changes
 head(top10)   # mostrar 10 1es files cada colm
 names(top10)  # mostrar nom colm
 
@@ -314,15 +322,15 @@ g1_pred_new_cases <- predict(object=lm_c_g1, newdata=g1_df_pred)
 g1_pred_df_result <- data.frame(date=g1_df_pred$date,g1_pred_new_cases)
 
 # Leemos las predicciones anteriores...
-g1_pred_df_final <- read.csv("C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
+g1_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
 g1_pred_df_final$date <- as.Date(g1_pred_df_final$date, format="%Y-%m-%d")
-g1_pred_df_final <- subset(g1_pred_df_final, select = -c(X))
+g1_pred_df_final <- subset(g1_pred_df_final, select = -c(0))
 
 # creamos un df con las predicciones anteriores + actual
 g1_pred_df_final <- rbind(g1_pred_df_final,g1_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g1_pred_df_final, file = "C-top10Cluster1Pred.csv")  # S3 !!!! Rebecca
+write.csv(g1_pred_df_final, file = "C-top10Cluster1Pred.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 
@@ -386,16 +394,16 @@ g2_pred_new_cases <- predict(object=lm_c_g2, newdata=g2_df_pred)
 g2_pred_df_result <- data.frame(date=g2_df_pred$date,g2_pred_new_cases)
 
 # Leemos las predicciones anteriores...
-g2_pred_df_final <- read.csv("C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
+g2_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
 g2_pred_df_final$date <- as.Date(g2_pred_df_final$date, format="%Y-%m-%d")
-g2_pred_df_final <- subset(g2_pred_df_final, select = -c(X))
+g2_pred_df_final <- subset(g2_pred_df_final, select = -c(0))
 
 # creamos un df con las predicciones anteriores + actual
 g2_pred_df_final <- rbind(g2_pred_df_final,g2_pred_df_result)
 
 
 # Export predictions for each cluster
-write.csv(g2_pred_df_final, file = "C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
+write.csv(g2_pred_df_final, file = "C-top10Cluster2Pred.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 #################################################################
@@ -449,15 +457,15 @@ g3_pred_new_cases <- predict(object=lm_c_g3, newdata=g3_df_pred)
 g3_pred_df_result <- data.frame(date=g3_df_pred$date,g3_pred_new_cases)
 
 # Leemos las predicciones anteriores...
-g3_pred_df_final <- read.csv("C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
+g3_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
 g3_pred_df_final$date <- as.Date(g3_pred_df_final$date, format="%Y-%m-%d")
-g3_pred_df_final <- subset(g3_pred_df_final, select = -c(X))
+g3_pred_df_final <- subset(g3_pred_df_final, select = -c(0))
 
 # creamos un df con las predicciones anteriores + actual
 g3_pred_df_final <- rbind(g3_pred_df_final,g3_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g3_pred_df_final, file = "C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
+write.csv(g3_pred_df_final, file = "C-top10Cluster3Pred.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 
@@ -511,15 +519,15 @@ g4_pred_new_cases <- predict(object=lm_c_g4, newdata=g4_df_pred)
 g4_pred_df_result <- data.frame(date=g4_df_pred$date,g4_pred_new_cases)
 
 # Leemos las predicciones anteriores...
-g4_pred_df_final <- read.csv("C-top10Cluster4Pred.csv")   # S3 !!!! Rebecca
+g4_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster4Pred.csv")   # S3 !!!! Rebecca
 g4_pred_df_final$date <- as.Date(g4_pred_df_final$date, format="%Y-%m-%d")
-g4_pred_df_final <- subset(g4_pred_df_final, select = -c(X))
+g4_pred_df_final <- subset(g4_pred_df_final, select = -c(0))
 
 # creamos un df con las predicciones anteriores + actual
 g4_pred_df_final <- rbind(g4_pred_df_final,g4_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g4_pred_df_final, file = "C-top10Cluster4Pred.csv")  # S3 !!!! Rebecca
+write.csv(g4_pred_df_final, file = "C-top10Cluster4Pred.csv", row.names = FALSE)  # S3 !!!! Rebecca
 
 
 #################################################################
@@ -570,12 +578,12 @@ g5_pred_new_cases <- predict(object=lm_c_g5, newdata=g5_df_pred)
 g5_pred_df_result <- data.frame(date=g5_df_pred$date,g5_pred_new_cases)
 
 # Leemos las predicciones anteriores...
-g5_pred_df_final <- read.csv("C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
+g5_pred_df_final <- read.csv("https://mvtec-group2.s3-eu-west-1.amazonaws.com/finaldata/C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
 g5_pred_df_final$date <- as.Date(g5_pred_df_final$date, format="%Y-%m-%d")
-g5_pred_df_final <- subset(g5_pred_df_final, select = -c(X))
+g5_pred_df_final <- subset(g5_pred_df_final, select = -c(0))
 
 # creamos un df con las predicciones anteriores + actual
 g5_pred_df_final <- rbind(g5_pred_df_final,g5_pred_df_result)
 
 # Export predictions for each cluster
-write.csv(g5_pred_df_final, file = "C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
+write.csv(g5_pred_df_final, file = "C-top10Cluster5Pred.csv", row.names = FALSE)  # S3 !!!! Rebecca

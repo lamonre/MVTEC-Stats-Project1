@@ -8,11 +8,6 @@ from botocore.exceptions import ClientError
 from config import bucket, folder, region
 import subprocess
 
-### Uncomment 3 lines below to load creds if uploading locally ###
-from dotenv import load_dotenv
-load_dotenv()
-IS_DEV = os.getenv('IS_DEV')
-
 #Run R Script to create B-top10Data.csv
 subprocess.call(['Rscript', '2_profilingClusters.R'])
 cluster1 = "C-top10Cluster1Pred.csv"

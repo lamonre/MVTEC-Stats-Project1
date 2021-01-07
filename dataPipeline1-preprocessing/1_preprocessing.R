@@ -7,8 +7,8 @@
 ############ READING DATA FROM EXCEL/CSV COVID ############
 ############################################################
 
-install.packages("readr") 
-install.packages("tidyverse")
+#install.packages("readr") 
+#install.packages("tidyverse")
 library(readr);
 library(tidyverse);
 
@@ -135,7 +135,7 @@ dataTemp <- read.csv("rawdata/temperatura.csv")
 dataTemp <- subset(dataTemp, select = -c(X))
 dataTemp <- rename(dataTemp, country = Country)
 
-write.csv(dataTemp, file = "B-top10DataTemperature.csv")
+write.csv(dataTemp, file = "B-top10DataTemperature.csv", row.names = FALSE)
 
 ############################################################
 ############     JOIN COVID + ALL EXTRA DATA   ############
@@ -185,4 +185,4 @@ dataOk <- dataOk %>%
                         "Australia", "New Zealand", "Marshall Islands", "Papua New Guinea", "Fiji", "Solomon Islands", "Vanuatu", "Samoa",
                         "Chile", "Peru", "Argentina", "Colombia", "Bolivia", "Ecuador", "Suriname", "Paraguay", "Guyana","Brazil","United States"))
 
-write.csv(dataOk, file = "B-top10Data.csv")
+write.csv(dataOk, file = "B-top10Data.csv", row.names = FALSE)
