@@ -1,16 +1,10 @@
-### PROJECT 1 Covid19 - Statistics
-# @authors: Ànnia, Rebecca, Rocío, Victor.
+##################################################
+######### ANÀLISI DEFINITIVA + PREDICCIÓ #########
+##################################################
 
-
-
-###################################################################
-############ READING DATA FROM EXCEL/CSV COVID + EXTRA ############
-###################################################################
-
-install.packages("readr") 
-install.packages("tidyverse")
-library(readr)
 library(tidyverse)
+install.packages("readr") 
+library(readr)
 
 
 #setwd("~/AMAZON") !!!! Rebecca
@@ -21,10 +15,11 @@ names(top10)  # mostrar nom colm
 
 library(lubridate)
 top10$date <- as.Date(top10$date, format="%Y-%m-%d")
+class(top10$date)
 #hist(top10$date, breaks=4)
 
 #top10cluster - agrupem per location, code and continent & treiem na's fent la mitjana
-top10clusterAll <- top10 %>%
+top10clusterAll <- top10 %>% 
   group_by(code, location, continent) %>%  # si date es posa aquí, apareix cada país per cada dia
   summarise(date = first(date),
             m_tcpm = mean(total_cases_per_million, na.rm = TRUE),   # si date es posa a summarise, apareix 1 país x 1 dia (agafa el 23 gen20)
@@ -76,10 +71,8 @@ top10clusterAll$cancer_deaths[is.nan(top10clusterAll$cancer_deaths)] <- 0
 #top10clusterAll$temp[is.na(top10clusterAll$temp)] <- 0
 
 # Comprovem que no hi ha na's
-apply(
-  is.na
-  (top10clusterAll), 2, mean)
-  
+apply(is.na (top10clusterAll), 2, mean)
+
 str(top10clusterAll) # x veure tipus dada. x clust: caràcters han ser factors 
 top10clusterAll$location <- as.factor(top10clusterAll$location)
 class(top10clusterAll$location)
@@ -93,7 +86,8 @@ top10clusterAll$corruption <- as.factor(top10clusterAll$corruption)
 class(top10clusterAll$corruption)
 top10clusterAll$healthSecurity <- as.factor(top10clusterAll$healthSecurity)
 class(top10clusterAll$healthSecurity)
-library(lubridate)
+
+
 top10clusterAll$date <- as.Date(top10clusterAll$date, format="%Y-%m-%d")
 class(top10clusterAll$date)
 
@@ -112,7 +106,7 @@ library(cluster)
 str(top10cluster)
 top10Matrix4 <- daisy(top10cluster[,c(5:23)], metric = "gower", stand=TRUE)
 top10dist4 <- top10Matrix4^2
-h4 <- hclust(top10dist4, method="ward.D2")
+h4 <- hclust(top10dist4, method = "ward.D2")
 plot(h4, labels = top10cluster$location, hang = -1, cex = 0.3, cex.axis=0.5, cex.lab=0.5)
 
 cluster4 <- cutree(h4, k=4)
@@ -236,7 +230,7 @@ c_g5_mean <- top10clusterAll %>%
 
 # Cluster g5 - Matrix correlation -> variables temporales
 #chart.Correlation(c_g5[,c(5:11,13,14)], histogram = FALSE, method = "pearson")
-                  
+
 # Cluster g5 - Matrix correlation -> variables NO temporales (lo hacemos con la media)
 # We can't do the correlation because we only have 2 countries
 
@@ -266,11 +260,12 @@ c_g5_mean <- top10clusterAll %>%
 ############   CLUSTER 1 - LINIAL MODEL PREDICTION   ############
 #################################################################
 
-# Seleccionamos las variables cuantitativas que nos dieron resultados más significativos 
+# Seleccionamos las categóricas que nos dieron resultados más significativos 
 lm_c_g1 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths + 
                 total_deaths_per_million + total_tests_per_thousand + total_tests + new_deaths + 
                 population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths + date, c_g1)
 summary(lm_c_g1)
+# total_tests és la variable més significativa
 
 
 # Cogemos los datos del cluster g1, para la fecha más actual del dataframe
@@ -307,10 +302,10 @@ g1_df_pred <- data.frame(date=c(today),
                          diabetes_deaths=c(g1_mean_dd))
 
 
-# hacemos prediccion
+# hacemos predicción
 g1_pred_new_cases <- predict(object=lm_c_g1, newdata=g1_df_pred)
 
-# creamos df con la prediccion y fecha actual
+# creamos df con la predicción y fecha actual
 g1_pred_df_result <- data.frame(date=g1_df_pred$date,g1_pred_new_cases)
 
 # Leemos las predicciones anteriores...
@@ -371,15 +366,16 @@ g2_df_pred <- data.frame(date=c(today2),
                          cancer_deaths=c(g2_mean_cad))
 
 
-# Seleccionamos las categóricas que nos dieron resultados más significativos 
+# Seleccionamos las variables que nos dieron resultados más significativos 
 
 lm_c_g2 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths + 
                 total_deaths_per_million + new_deaths + population + population_density + 
                 median_age + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths + cancer_deaths + date, c_g2)
 summary(lm_c_g2)
+# les morts per malalties cardiovasculars és la variable més significativa
 
 
-# hacemos prediccion
+# hacemos predicción
 g2_pred_new_cases <- predict(object=lm_c_g2, newdata=g2_df_pred)
 
 # creamos df con la prediccion y fecha actual
@@ -405,7 +401,8 @@ write.csv(g2_pred_df_final, file = "C-top10Cluster2Pred.csv")  # S3 !!!! Rebecca
 lm_c_g3 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths +
                 total_deaths_per_million +  new_deaths + population + cardiovascular_deaths + 
                 pulmonary_deaths + cancer_deaths + date, c_g3)
-#summary(lm_c_g3)
+summary(lm_c_g3)
+# la variable més significativa és 
 
 # Cogemos los datos del cluster g3, para la fecha más actual del dataframe
 # Duda: ¿Está bien coger sólo 1 día o tendríamos que haber cogido más para hacer la predicción?
@@ -468,7 +465,9 @@ write.csv(g3_pred_df_final, file = "C-top10Cluster3Pred.csv")  # S3 !!!! Rebecca
 lm_c_g4 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths +
                 total_deaths_per_million + new_deaths +
                 population + median_age + gdp_per_capita + cardiovascular_deaths + diabetes_deaths + date, c_g4)
-#summary(lm_c_g4)
+summary(lm_c_g4)
+# la variable més significativa és total_cases, en negatiu. Dps, noves morts
+
 
 # Cogemos los datos del cluster g4, para la fecha más actual del dataframe
 # Duda: ¿Está bien coger sólo 1 día o tendríamos que haber cogido más para hacer la predicción?
@@ -504,7 +503,7 @@ g4_df_pred <- data.frame(date=c(today4),
                          diabetes_deaths=c(g4_mean_dd))
 
 
-# hacemos prediccion
+# hacemos predicción
 g4_pred_new_cases <- predict(object=lm_c_g4, newdata=g4_df_pred)
 
 # creamos df con la prediccion y fecha actual
@@ -529,7 +528,8 @@ write.csv(g4_pred_df_final, file = "C-top10Cluster4Pred.csv")  # S3 !!!! Rebecca
 lm_c_g5 <- lm(new_cases ~ total_cases + total_cases_per_million + total_deaths +
                 total_deaths_per_million + new_deaths +
                 population + cardiovascular_deaths + pulmonary_deaths + diabetes_deaths + date, c_g5)
-#summary(lm_c_g5)
+summary(lm_c_g5)
+# la variable més significativa és la població
 
 # Cogemos los datos del cluster g5, para la fecha más actual del dataframe
 # Duda: ¿Está bien coger sólo 1 día o tendríamos que haber cogido más para hacer la predicción?
@@ -579,3 +579,4 @@ g5_pred_df_final <- rbind(g5_pred_df_final,g5_pred_df_result)
 
 # Export predictions for each cluster
 write.csv(g5_pred_df_final, file = "C-top10Cluster5Pred.csv")  # S3 !!!! Rebecca
+
